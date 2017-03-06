@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import 'whatwg-fetch'
 import moment from 'moment';
+import request from '../request/Request';
 
 class CommentForm extends Component {
   constructor(props) {
@@ -8,12 +8,11 @@ class CommentForm extends Component {
     this.state = {
         firstName: '',
         lastName: '',
-        text: 'Comment...',
-        requestResult: {
-            success: false,
-            danger: false
-        }
+        text: 'Comment...'
     };
+
+    this.message = null;
+    this.type = null;
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -39,52 +38,36 @@ class CommentForm extends Component {
             "lastName": this.state.lastName
         }
     }
-    let result = this.request(data);
-    result.then((value) => {
-        this.setState({[value]: true});
+    request({
+        POST: `https://inloop-webproject.herokuapp.com/api/feeds/${this.props.feed_id}/comments`,
+        headers: {
+            "content-type": "application/json"
+        },
+        body: JSON.stringify(data)
+    }).then(data => {
+        this.message = "Commet was successfully saved";
+        this.type = "success";
+    }).catch(error => {
+        this.message = "Error in saving comment. Please repeat action.";
+        this.type = "danger";
     });
   }
 
-  request(data) {
-    return fetch(`https://inloop-webproject.herokuapp.com/api/feeds/${this.props.feed_id}/comments`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    }).then((data) => {
-        return "success";
-    }).catch((error) => {
-        console.log('request failed', error);
-        return "danger";
-    })
-  }
-
   closeInfo(name) {
-    this.setState({[name]: false});
+    this.message = null;
   }
 
   render() {
 
-    let message = null;
-    let type = null;
-    let requestInfo =null;
-    if (this.state.success) {
-        message = "Commet was successfully saved";
-        type = "success";
-    }
-    if (this.state.danger) {
-        message = "Error in saving comment. Please repeat action.";
-        type = "danger";
-    }
-    if (message) {
+    let requestInfo = null;
+    if (this.message) {
         requestInfo = ( 
             <div className="row">
                 <div className="alert alert-success" role="alert">
-                <button type="button" className="close" aria-label="Close" onClick={this.closeInfo(type)}>
+                <button type="button" className="close" aria-label="Close" onClick={this.closeInfo(this.type)}>
                     <span aria-hidden="true">×</span>
                 </button>
-                {message}
+                {this.message}
                 </div> 
             </div>
         );
@@ -109,17 +92,43 @@ class CommentForm extends Component {
 }
 
 class LoopComments extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.message = null;
+    this.type = null;
+
+    this.deleteComment = this.deleteComment.bind(this);
+  }
+
+  deleteComment(comment_id) {
+    request({
+        DELETE: `https://inloop-webproject.herokuapp.com/api/feeds/${this.props.feed_id}/comments/${comment_id}`
+    }).then(data => {
+        this.message = "Commet was successfully deleted";
+        this.type = "success";
+    }).catch(error => {
+        this.message = "Error in deleting comment. Please repeat action.";
+        this.type = "danger";
+    });
+  }
+    
     render() {
+        
+        let self = this;
+
         return (
             <div className="row">
             {this.props.comments.map(function(comment, i) {
                 return (
-                    <div key={i} className="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                    <div key={i} className="col-sm-12">
                         <div className="card feed">
                             <div className="card-block">
                                 <img className="feed-avatar rounded-circle" src={comment.person.avatar} alt="Person avatar" />
                                 <div className="feed-body">
                                     <h4 className="card-title">{comment.person.firstName} {comment.person.lastName}</h4>
+                                    <button className="btn btn-warning float-right" onClick={self.deleteComment(comment.id)} title="Delete feed">X</button>
                                     <p className="card-text feed-timestamp">{moment(comment.date).format('DD. MM. YYYY, h:mm a')}</p>
                                     <p className="card-text feed-text">{comment.text}</p>
                                 </div>
@@ -138,7 +147,7 @@ class Comment extends Component {
         return(
             <div>
                 <CommentForm feed_id={this.props.feed_id} />
-                <LoopComments comments={this.props.comments} />
+                <LoopComments feed_id={this.props.feed_id} comments={this.props.comments} />
             </div>
         );
     }

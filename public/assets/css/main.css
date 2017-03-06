@@ -17646,6 +17646,7 @@ header {
         padding: 0 .2rem; } }
 
 .feed {
+  margin-bottom: 1rem;
   /** Mobile first */ }
   .feed-avatar {
     width: 5rem;
@@ -17672,7 +17673,8 @@ header {
   /** Mobile first */ }
   .feed-detail-avatar {
     width: 15rem;
-    height: 15rem; }
+    height: 15rem;
+    margin-bottom: 1rem; }
   .feed-detail-text {
     color: #212738;
     text-align: justify; }

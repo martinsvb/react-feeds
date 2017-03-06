@@ -15,7 +15,7 @@ class LoadFeeds extends Component {
                 {
                 ({error, result, loading}) => {
                     if (error) {
-                        return <div>Error<pre>{JSON.stringify(result, null, 2) }</pre></div>;
+                        return <div>Error<pre>{JSON.stringify(error, null, 2) }</pre></div>;
                     }
                     if (loading) {
                         return <div>loading...</div>;
