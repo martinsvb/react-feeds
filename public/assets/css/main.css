@@ -467,7 +467,7 @@ html {
 
 body {
   font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: normal;
   line-height: 1.5;
   color: #292b2c;
@@ -706,7 +706,7 @@ mark,
 .blockquote {
   padding: 0.5rem 1rem;
   margin-bottom: 1rem;
-  font-size: 1.25rem;
+  font-size: 1.375rem;
   border-left: 0.25rem solid #eceeef; }
 
 .blockquote-footer {
@@ -1686,7 +1686,7 @@ pre {
   display: block;
   width: 100%;
   padding: 0.5rem 0.75rem;
-  font-size: 1rem;
+  font-size: 1.1rem;
   line-height: 1.25;
   color: #464a4c;
   background-color: #fff;
@@ -1713,7 +1713,7 @@ pre {
     cursor: not-allowed; }
 
 select.form-control:not([size]):not([multiple]) {
-  height: calc(2.25rem + 2px); }
+  height: calc(2.375rem + 2px); }
 
 select.form-control:focus::-ms-value {
   color: #464a4c;
@@ -1742,7 +1742,7 @@ select.form-control:focus::-ms-value {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   margin-bottom: 0;
-  font-size: 1rem; }
+  font-size: 1.1rem; }
 
 .form-control-static {
   padding-top: 0.5rem;
@@ -1825,8 +1825,8 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 .form-control-danger {
   padding-right: 2.25rem;
   background-repeat: no-repeat;
-  background-position: center right 0.5625rem;
-  background-size: 1.125rem 1.125rem; }
+  background-position: center right 0.59375rem;
+  background-size: 1.1875rem 1.1875rem; }
 
 .has-success .form-control-feedback,
 .has-success .form-control-label,
@@ -1948,7 +1948,7 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
   user-select: none;
   border: 1px solid transparent;
   padding: 0.5rem 1rem;
-  font-size: 1rem;
+  font-size: 1.1rem;
   border-radius: 0.25rem;
   transition: all 0.2s ease-in-out; }
   .btn:focus, .btn:hover {
@@ -2302,7 +2302,7 @@ tbody.collapse.show {
   min-width: 10rem;
   padding: 0.5rem 0;
   margin: 0.125rem 0 0;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #292b2c;
   text-align: left;
   list-style: none;
@@ -2534,7 +2534,7 @@ tbody.collapse.show {
 .input-group-addon {
   padding: 0.5rem 0.75rem;
   margin-bottom: 0;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: normal;
   line-height: 1.25;
   color: #464a4c;
@@ -2676,7 +2676,7 @@ tbody.collapse.show {
 .custom-select {
   display: inline-block;
   max-width: 100%;
-  height: calc(2.25rem + 2px);
+  height: calc(2.375rem + 2px);
   padding: 0.375rem 1.75rem 0.375rem 0.75rem;
   line-height: 1.25;
   color: #464a4c;
@@ -3442,14 +3442,14 @@ a.badge:focus, a.badge:hover {
 .jumbotron {
   padding: 2rem 1rem;
   margin-bottom: 2rem;
-  background-color: #eceeef;
+  background-color: #fff;
   border-radius: 0.3rem; }
   @media (min-width: 576px) {
     .jumbotron {
       padding: 4rem 2rem; } }
 
 .jumbotron-hr {
-  border-top-color: #d0d5d8; }
+  border-top-color: #e6e6e6; }
 
 .jumbotron-fluid {
   padding-right: 0;
@@ -3734,7 +3734,7 @@ button.list-group-item-danger {
 
 .close {
   float: right;
-  font-size: 1.5rem;
+  font-size: 1.65rem;
   font-weight: bold;
   line-height: 1;
   color: #000;
@@ -4020,7 +4020,7 @@ button.close {
 .popover-title {
   padding: 8px 14px;
   margin-bottom: 0;
-  font-size: 1rem;
+  font-size: 1.1rem;
   background-color: #f7f7f7;
   border-bottom: 1px solid #ebebeb;
   border-top-right-radius: calc(0.3rem - 1px);
@@ -7178,7 +7178,7 @@ html {
 
 body {
   font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: normal;
   line-height: 1.5;
   color: #292b2c;
@@ -7606,7 +7606,7 @@ a.badge:focus, a.badge:hover {
   user-select: none;
   border: 1px solid transparent;
   padding: 0.5rem 1rem;
-  font-size: 1rem;
+  font-size: 1.1rem;
   border-radius: 0.25rem;
   transition: all 0.2s ease-in-out; }
   .btn:focus, .btn:hover {
@@ -8268,7 +8268,7 @@ input[type="button"].btn-block {
 
 .close {
   float: right;
-  font-size: 1.5rem;
+  font-size: 1.65rem;
   font-weight: bold;
   line-height: 1;
   color: #000;
@@ -8400,7 +8400,7 @@ pre {
 .custom-select {
   display: inline-block;
   max-width: 100%;
-  height: calc(2.25rem + 2px);
+  height: calc(2.375rem + 2px);
   padding: 0.375rem 1.75rem 0.375rem 0.75rem;
   line-height: 1.25;
   color: #464a4c;
@@ -8511,7 +8511,7 @@ pre {
   min-width: 10rem;
   padding: 0.5rem 0;
   margin: 0.125rem 0 0;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #292b2c;
   text-align: left;
   list-style: none;
@@ -8589,7 +8589,7 @@ pre {
   display: block;
   width: 100%;
   padding: 0.5rem 0.75rem;
-  font-size: 1rem;
+  font-size: 1.1rem;
   line-height: 1.25;
   color: #464a4c;
   background-color: #fff;
@@ -8616,7 +8616,7 @@ pre {
     cursor: not-allowed; }
 
 select.form-control:not([size]):not([multiple]) {
-  height: calc(2.25rem + 2px); }
+  height: calc(2.375rem + 2px); }
 
 select.form-control:focus::-ms-value {
   color: #464a4c;
@@ -8645,7 +8645,7 @@ select.form-control:focus::-ms-value {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   margin-bottom: 0;
-  font-size: 1rem; }
+  font-size: 1.1rem; }
 
 .form-control-static {
   padding-top: 0.5rem;
@@ -8728,8 +8728,8 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 .form-control-danger {
   padding-right: 2.25rem;
   background-repeat: no-repeat;
-  background-position: center right 0.5625rem;
-  background-size: 1.125rem 1.125rem; }
+  background-position: center right 0.59375rem;
+  background-size: 1.1875rem 1.1875rem; }
 
 .has-success .form-control-feedback,
 .has-success .form-control-label,
@@ -9664,7 +9664,7 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 .input-group-addon {
   padding: 0.5rem 0.75rem;
   margin-bottom: 0;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: normal;
   line-height: 1.25;
   color: #464a4c;
@@ -9741,14 +9741,14 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 .jumbotron {
   padding: 2rem 1rem;
   margin-bottom: 2rem;
-  background-color: #eceeef;
+  background-color: #fff;
   border-radius: 0.3rem; }
   @media (min-width: 576px) {
     .jumbotron {
       padding: 4rem 2rem; } }
 
 .jumbotron-hr {
-  border-top-color: #d0d5d8; }
+  border-top-color: #e6e6e6; }
 
 .jumbotron-fluid {
   padding-right: 0;
@@ -10687,7 +10687,7 @@ template {
 .popover-title {
   padding: 8px 14px;
   margin-bottom: 0;
-  font-size: 1rem;
+  font-size: 1.1rem;
   background-color: #f7f7f7;
   border-bottom: 1px solid #ebebeb;
   border-top-right-radius: calc(0.3rem - 1px);
@@ -10810,7 +10810,7 @@ html {
 
 body {
   font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: normal;
   line-height: 1.5;
   color: #292b2c;
@@ -11301,7 +11301,7 @@ mark,
 .blockquote {
   padding: 0.5rem 1rem;
   margin-bottom: 1rem;
-  font-size: 1.25rem;
+  font-size: 1.375rem;
   border-left: 0.25rem solid #eceeef; }
 
 .blockquote-footer {
@@ -17529,6 +17529,7 @@ h1,
 h1 a,
 h1 a:hover {
   color: #212738;
+  word-spacing: .5rem;
   letter-spacing: .2rem;
   text-decoration: none; }
 
@@ -17672,12 +17673,6 @@ header {
   .feed-detail-avatar {
     width: 15rem;
     height: 15rem; }
-  .feed-detail-body {
-    width: -webkit-calc(100% - 6rem) !important;
-    width: -moz-calc(100% - 6rem) !important;
-    width: calc(100% - 6rem) !important;
-    float: right; }
-  .feed-detail-timestamp {
-    color: #798085; }
   .feed-detail-text {
-    color: #212738; }
+    color: #212738;
+    text-align: justify; }

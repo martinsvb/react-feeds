@@ -8,7 +8,7 @@ class Header extends Component {
                 <header>
                     <nav className="app-nav">
                         <Link to="/add-feed" className="app-nav-link" activeClassName="active-link" title="Add feed">
-                        <i className="fa fa-edit app-nav-link-ico" aria-hidden="true"></i><span className="app-nav-link-text">Add feed</span>
+                        <i className="fa fa-home app-nav-link-ico" aria-hidden="true"></i><span className="app-nav-link-text">Home</span>
                         </Link>
                         <Link to="/show-feeds" className="app-nav-link" activeClassName="active-link" title="Show feeds">
                         <i className="fa fa-file-text app-nav-link-ico" aria-hidden="true"></i><span className="app-nav-link-text">Show feeds</span>

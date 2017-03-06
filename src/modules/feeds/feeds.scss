@@ -27,3 +27,21 @@
         height: 10rem;
     }
 }
+
+.feed-detail {
+    
+    width: 100%;
+    text-align: center;
+
+    /** Mobile first */
+    &-avatar {
+        width: 15rem;
+        height: 15rem;
+        margin-bottom: 1rem;
+    }
+
+    &-text {
+        color: $clr-pri;
+        text-align: justify;
+    }
+}
