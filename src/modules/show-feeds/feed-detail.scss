@@ -1,13 +1,12 @@
-.feed {
+.feed-detail {
     
+    width: 100%;
+    text-align: center;
+
     /** Mobile first */
     &-avatar {
-        width: 5rem;
-        height: 5rem;
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        z-index: 10;
+        width: 15rem;
+        height: 15rem;
     }
     
     &-body {
@@ -23,7 +22,5 @@
 
     &-text {
         color: $clr-pri;
-        overflow: hidden;
-        height: 10rem;
     }
 }
