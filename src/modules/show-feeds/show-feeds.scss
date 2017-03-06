@@ -1,0 +1,29 @@
+.feeds {
+    
+    /** Mobile first */
+    &-avatar {
+        width: 5rem;
+        height: 5rem;
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        z-index: 10;
+    }
+    
+    &-body {
+        width: -webkit-calc(100% - 6rem) !important;
+        width:    -moz-calc(100% - 6rem) !important;
+        width:         calc(100% - 6rem) !important;
+        float: right;
+    }
+
+    &-timestamp {
+        color: $clr-ter;
+    }
+
+    &-text {
+        color: $clr-pri;
+        overflow: hidden;
+        height: 10rem;
+    }
+}
