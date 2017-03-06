@@ -8,7 +8,7 @@
 }
 
 @mixin width-calc($width, $short) {
-    width: -webkit-calc($width - $short);
-    width:    -moz-calc($width - $short);
-    width:         calc($width - $short);
+    width: -webkit-calc($width - $short) !important;
+    width:    -moz-calc($width - $short) !important;
+    width:         calc($width - $short) !important;
 }

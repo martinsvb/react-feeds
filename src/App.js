@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Router, Route, hashHistory } from 'react-router';
 
-import Header from './Header';
-import AddFeed from './Add-feed';
-import ShowFeeds from './Show-feeds';
+import Header from './modules/header/Header';
+import AddFeed from './modules/add-feed/Add-feed';
+import ShowFeeds from './modules/show-feeds/Show-feeds';
 
 class App extends Component {
     render () {

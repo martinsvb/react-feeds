@@ -111,5 +111,8 @@
 // Custom mixins
 @import "./_mixins";
 
-// Main content styles
+// Content styles
 @import "./content";
+@import "../../../src/modules/header/header";
+@import "../../../src/modules/show-feeds/show-feeds";
+@import "../../../src/modules/add-feed/add-feed";

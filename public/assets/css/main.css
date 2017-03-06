@@ -629,19 +629,19 @@ h1, h2, h3, h4, h5, h6,
   color: inherit; }
 
 h1, .h1 {
-  font-size: 2.5rem; }
+  font-size: 2.2rem; }
 
 h2, .h2 {
-  font-size: 2rem; }
+  font-size: 1.8rem; }
 
 h3, .h3 {
-  font-size: 1.75rem; }
+  font-size: 1.6rem; }
 
 h4, .h4 {
-  font-size: 1.5rem; }
+  font-size: 1.2rem; }
 
 h5, .h5 {
-  font-size: 1.25rem; }
+  font-size: 1.15rem; }
 
 h6, .h6 {
   font-size: 1rem; }
@@ -11224,19 +11224,19 @@ h1, h2, h3, h4, h5, h6,
   color: inherit; }
 
 h1, .h1 {
-  font-size: 2.5rem; }
+  font-size: 2.2rem; }
 
 h2, .h2 {
-  font-size: 2rem; }
+  font-size: 1.8rem; }
 
 h3, .h3 {
-  font-size: 1.75rem; }
+  font-size: 1.6rem; }
 
 h4, .h4 {
-  font-size: 1.5rem; }
+  font-size: 1.2rem; }
 
 h5, .h5 {
-  font-size: 1.25rem; }
+  font-size: 1.15rem; }
 
 h6, .h6 {
   font-size: 1rem; }
@@ -17525,14 +17525,10 @@ a.text-gray-dark:focus, a.text-gray-dark:hover {
 .blockEl {
   display: block; }
 
-.float-left {
-  margin-right: .8rem; }
-
 h1,
 h1 a,
 h1 a:hover {
   color: #212738;
-  text-transform: uppercase;
   letter-spacing: .2rem;
   text-decoration: none; }
 
@@ -17558,11 +17554,11 @@ th:first-letter {
 
 .container {
   /** Only mobile */ }
-  @media (max-width: 991px) {
+  @media (max-width: 767px) {
     .container {
-      width: -webkit-calc($width - $short);
-      width: -moz-calc($width - $short);
-      width: calc($width - $short);
+      width: -webkit-calc($width - $short) !important;
+      width: -moz-calc($width - $short) !important;
+      width: calc($width - $short) !important;
       margin: 0 1rem;
       padding: 0; } }
 
@@ -17609,7 +17605,7 @@ input[type="checkbox"],
 header {
   width: 100%;
   padding: 1rem;
-  margin: 0 0 2rem 0;
+  margin: 0 0 1rem 0;
   background: #f7f7f9; }
 
 .app-nav {
@@ -17648,11 +17644,21 @@ header {
         display: inline-block;
         padding: 0 .2rem; } }
 
-.body {
-  /** Mobile first */
-  margin: 1rem;
-  /** Medium screens */ }
-  @media (min-width: 768px) {
-    .body {
-      width: 1024px;
-      margin: 1rem auto; } }
+.feeds {
+  /** Mobile first */ }
+  .feeds-avatar {
+    width: 5rem;
+    height: 5rem;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 10; }
+  .feeds-body {
+    width: -webkit-calc(100% - 6rem) !important;
+    width: -moz-calc(100% - 6rem) !important;
+    width: calc(100% - 6rem) !important;
+    float: right; }
+  .feeds-timestamp {
+    color: #798085; }
+  .feeds-text {
+    color: #212738; }
