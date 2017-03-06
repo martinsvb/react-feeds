@@ -1,0 +1,175 @@
+.row {
+    @include make-row();
+    margin-bottom: .5rem;
+}
+
+.cleaner {
+    clear: both;
+}
+
+.fullWidth {
+    width: 100%;
+}
+
+.blockEl {
+    display: block;
+}
+
+.float-left {
+    @extend .float-left;
+    margin-right: .8rem;
+}
+
+h1,
+h1 a,
+h1 a:hover {
+    color: $clr-pri;
+    text-transform: uppercase;
+    letter-spacing: .2rem;
+    text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    display: inline-block;
+}
+
+h1:first-letter,
+h2:first-letter,
+h3:first-letter,
+h4:first-letter,
+h5:first-letter,
+h6:first-letter,
+label:first-letter,
+p:first-letter,
+button:first-letter,
+th:first-letter {
+    text-transform: uppercase;
+}
+
+.container {
+    /** Only mobile */
+    @include media-breakpoint-down(sm) {
+        @include width-calc(100%, 2rem);
+        margin: 0 1rem;
+        padding: 0;
+    }
+}
+
+input {
+    margin-bottom: .2rem;
+}
+
+.valid[required] {
+    border-left: .3rem solid $brand-success;
+}
+.invalid {
+    border-left: .3rem solid $brand-danger;
+}
+input[type="text"].pristine,
+input[type="number"].pristine,
+input[type="password"].pristine {
+    border-left: $input-btn-border-width solid $input-group-addon-border-color;
+    &:focus {
+        border-left: $input-btn-border-width solid $input-border-focus;
+    }
+}
+
+.input-group-addon {
+    padding-right: 1.5rem;
+}
+
+label,
+input[type="checkbox"],
+.showPointer {
+    cursor: pointer !important;
+}
+
+/** Bootstrap responsive table hack */
+@-moz-document url-prefix() {
+  fieldset { display: table-cell; }
+}
+
+.active {
+    background: $brand-success;
+}
+.disabled {
+    background: $brand-danger;
+}
+
+.form-check-span {
+    margin: 0 0 .5rem .2rem;
+}
+
+header {
+    width: 100%;
+    padding: 1rem;
+    margin: 0 0 2rem 0;
+    background: $gray-lightest;
+}
+
+.app-nav {
+    
+    /** Mobile first */
+    margin: 1rem 0 .5rem 0;
+    &-link {
+        display: inline-block;
+        line-height: 2rem;
+        text-align: center;
+        margin-right: .5rem;
+        font-size: 1.2rem;
+        color: $gray-light;
+        border-radius: 50%;
+        border: 1px solid $gray-light;
+        background: $white;
+        &-ico {
+            font-size: 1.2rem;
+        }
+        &-text {
+            display: none;
+        }
+        &:hover,
+        &.active-link {
+            text-decoration: none;
+            color: $gray-lightest;
+            background: $gray-light;
+        }
+    }
+    
+    /** Only mobile */
+    @include media-breakpoint-down(sm) {
+        &-link {
+            width: 3rem;
+            height: 3rem;
+            line-height: 2.9rem;
+        }
+    }
+
+    /** Medium screens */
+    @include media-breakpoint-up(md) {
+        &-link {
+            padding: .3rem .8rem;
+            border-radius: .2rem;
+            &-text {
+                display: inline-block;
+                padding: 0 .2rem;
+            }
+        }
+    }
+}
+
+.body {
+    
+    /** Mobile first */
+    margin: 1rem;
+
+    /** Medium screens */
+    @include media-breakpoint-up(md) {
+        width: 1024px;
+        margin: 1rem auto;
+    }
+}
