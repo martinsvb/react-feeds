@@ -1,0 +1,102 @@
+.row {
+    @include make-row();
+    margin-bottom: .5rem;
+}
+
+.cleaner {
+    clear: both;
+}
+
+.fullWidth {
+    width: 100%;
+}
+
+.blockEl {
+    display: block;
+}
+
+h1,
+h1 a,
+h1 a:hover {
+    color: $clr-pri;
+    word-spacing: .5rem;
+    letter-spacing: .2rem;
+    text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    display: inline-block;
+}
+
+h1:first-letter,
+h2:first-letter,
+h3:first-letter,
+h4:first-letter,
+h5:first-letter,
+h6:first-letter,
+label:first-letter,
+p:first-letter,
+button:first-letter,
+th:first-letter {
+    text-transform: uppercase;
+}
+
+.container {
+    /** Only mobile */
+    @include media-breakpoint-down(sm) {
+        @include width-calc(100%, 2rem);
+        margin: 0 1rem;
+        padding: 0;
+    }
+}
+
+input {
+    margin-bottom: .2rem;
+}
+
+.valid[required] {
+    border-left: .3rem solid $brand-success;
+}
+.invalid {
+    border-left: .3rem solid $brand-danger;
+}
+input[type="text"].pristine,
+input[type="number"].pristine,
+input[type="password"].pristine {
+    border-left: $input-btn-border-width solid $input-group-addon-border-color;
+    &:focus {
+        border-left: $input-btn-border-width solid $input-border-focus;
+    }
+}
+
+.input-group-addon {
+    padding-right: 1.5rem;
+}
+
+label,
+input[type="checkbox"],
+button,
+.showPointer {
+    cursor: pointer !important;
+}
+
+/** Bootstrap responsive table hack */
+@-moz-document url-prefix() {
+  fieldset { display: table-cell; }
+}
+
+.active {
+    background: $brand-success;
+}
+.disabled {
+    background: $brand-danger;
+}
+
+.form-check-span {
+    margin: 0 0 .5rem .2rem;
+}

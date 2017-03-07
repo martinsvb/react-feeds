@@ -6,7 +6,7 @@ AngularJs notes editor
 - git clone --depth 1 https://github.com/martinsvb/react-feeds
 - npm install
 - gulp
-- npm start
+- npm run go
 
 # Licence
 
