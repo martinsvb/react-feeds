@@ -8,8 +8,7 @@ var server_port = process.env.PORT || 3000;
 app.use(express.static(__projectRoot));
 
 app.get('/', function (req, res) {
-    console.log("app request");
-    res.sendFile(path.join('/build/index.html'));
+    res.sendFile('/build/index.html');
 });
 
 app.listen(server_port);
