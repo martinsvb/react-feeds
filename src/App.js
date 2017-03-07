@@ -11,7 +11,7 @@ class App extends Component {
         return (
             <Router history={hashHistory}>
                 <Route path="/" component={Header}>
-                    <Route path="/add-feed" component={Home}/>
+                    <Route path="/home" component={Home}/>
                     <Route path="/show-feeds" component={ShowFeeds}/>
                     <Route path="/feed-detail/:feed_id" component={FeedDetail}/>
                 </Route>

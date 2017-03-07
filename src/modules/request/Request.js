@@ -1,3 +1,5 @@
+export const baseURL = "https://inloop-webproject.herokuapp.com/api/feeds";
+
 export default obj => {
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();

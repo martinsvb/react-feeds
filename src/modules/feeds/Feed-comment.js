@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import moment from 'moment';
-import request from '../request/Request';
+import request, { baseURL } from '../request/Request';
 
 class CommentForm extends Component {
   constructor(props) {
@@ -8,11 +9,10 @@ class CommentForm extends Component {
     this.state = {
         firstName: '',
         lastName: '',
-        text: 'Comment...'
+        text: 'Comment...',
+        message: '',
+        type: ''
     };
-
-    this.message = null;
-    this.type = null;
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,7 +28,6 @@ class CommentForm extends Component {
     });
   }
 
-
   handleSubmit(event) {
     event.preventDefault();
     let data = {
@@ -38,37 +37,37 @@ class CommentForm extends Component {
             "lastName": this.state.lastName
         }
     }
+    let self = this;
     request({
-        POST: `https://inloop-webproject.herokuapp.com/api/feeds/${this.props.feed_id}/comments`,
+        POST: `${baseURL}/${this.props.feed_id}/comments`,
         headers: {
             "content-type": "application/json"
         },
         body: JSON.stringify(data)
-    }).then(data => {
-        this.message = "Commet was successfully saved";
-        this.type = "success";
-    }).catch(error => {
-        this.message = "Error in saving comment. Please repeat action.";
-        this.type = "danger";
+    }).then((data) => {
+        self.props.reload(`${baseURL}/${self.props.feed_id}`);
+        self.setState({message: "Commet was successfully saved"});
+        self.setState({type: "success"});
+    }).catch((error) => {
+        self.setState({message: "Error in saving comment. Please repeat action."});
+        self.setState({type: "danger"});
     });
-  }
-
-  closeInfo(name) {
-    this.message = null;
   }
 
   render() {
 
     let requestInfo = null;
-    if (this.message) {
+    if (this.state.message) {
         requestInfo = ( 
             <div className="row">
-                <div className="alert alert-success" role="alert">
-                <button type="button" className="close" aria-label="Close" onClick={this.closeInfo(this.type)}>
-                    <span aria-hidden="true">×</span>
-                </button>
-                {this.message}
-                </div> 
+                <div className="col-sm-12">
+                    <div className={`alert alert-${this.state.type}`} role="alert">
+                    <button type="button" className="close" aria-label="Close" onClick={() => this.setState({message: ''})}>
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    {this.state.message}
+                    </div>
+                </div>
             </div>
         );
     }
@@ -85,7 +84,9 @@ class CommentForm extends Component {
         <div className="form-group">
             <textarea className="form-control" name="text" rows="5" value={this.state.text} onChange={this.handleChange} />
         </div>
-        <input type="submit" value="Submit" />
+        <button type="submit" className="btn btn-warning addComment" title="Delete feed">
+            add comment
+        </button>
       </form>
     );
   }
@@ -96,21 +97,26 @@ class LoopComments extends Component {
   constructor(props) {
     super(props);
 
-    this.message = null;
-    this.type = null;
+    this.state = {
+        message: '',
+        type: ''
+    };
 
     this.deleteComment = this.deleteComment.bind(this);
   }
 
-  deleteComment(comment_id) {
+  deleteComment(i) {
+    let self = this;
+    let comment_id = this.props.comments[i]._id;
     request({
-        DELETE: `https://inloop-webproject.herokuapp.com/api/feeds/${this.props.feed_id}/comments/${comment_id}`
-    }).then(data => {
-        this.message = "Commet was successfully deleted";
-        this.type = "success";
-    }).catch(error => {
-        this.message = "Error in deleting comment. Please repeat action.";
-        this.type = "danger";
+        DELETE: `${baseURL}/${this.props.feed_id}/comments/${this.props.comments[i]._id}`
+    }).then((data) => {
+        self.props.comments.splice(i, 1);
+        self.setState({message: "Commet was successfully deleted"});
+        self.setState({type: "success"});
+    }).catch((error) => {
+        self.setState({message: "Error in deleting comment. Please repeat action."});
+        self.setState({type: "danger"});
     });
   }
     
@@ -118,8 +124,23 @@ class LoopComments extends Component {
         
         let self = this;
 
+        let requestInfo = null;
+        if (this.state.message) {
+            requestInfo = ( 
+                <div className="col-sm-12">
+                    <div className={`alert alert-${this.state.type}`} role="alert">
+                    <button type="button" className="close" aria-label="Close" onClick={() => this.setState({message: ''})}>
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    {this.state.message}
+                    </div>
+                </div>
+            );
+        }
+
         return (
             <div className="row">
+            {requestInfo}
             {this.props.comments.map(function(comment, i) {
                 return (
                     <div key={i} className="col-sm-12">
@@ -128,7 +149,9 @@ class LoopComments extends Component {
                                 <img className="feed-avatar rounded-circle" src={comment.person.avatar} alt="Person avatar" />
                                 <div className="feed-body">
                                     <h4 className="card-title">{comment.person.firstName} {comment.person.lastName}</h4>
-                                    <button className="btn btn-warning float-right" onClick={self.deleteComment(comment.id)} title="Delete feed">X</button>
+                                    <button type="button" className="btn btn-warning float-right" onClick={() => self.deleteComment(i)} title="Delete feed">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
                                     <p className="card-text feed-timestamp">{moment(comment.date).format('DD. MM. YYYY, h:mm a')}</p>
                                     <p className="card-text feed-text">{comment.text}</p>
                                 </div>
@@ -146,7 +169,7 @@ class Comment extends Component {
     render() {
         return(
             <div>
-                <CommentForm feed_id={this.props.feed_id} />
+                <CommentForm feed_id={this.props.feed_id} reload={this.props.reload} />
                 <LoopComments feed_id={this.props.feed_id} comments={this.props.comments} />
             </div>
         );

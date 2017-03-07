@@ -17586,6 +17586,7 @@ input[type="password"].pristine {
 
 label,
 input[type="checkbox"],
+button,
 .showPointer {
   cursor: pointer !important; }
 
@@ -17678,3 +17679,9 @@ header {
   .feed-detail-text {
     color: #212738;
     text-align: justify; }
+
+.addComment {
+  width: 100%;
+  border-radius: 2rem;
+  text-transform: uppercase;
+  margin-bottom: 1rem; }
