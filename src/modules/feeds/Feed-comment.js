@@ -45,9 +45,9 @@ class CommentForm extends Component {
         },
         body: JSON.stringify(data)
     }).then((data) => {
-        self.props.reload(`${baseURL}/${self.props.feed_id}`);
         self.setState({message: "Commet was successfully saved"});
         self.setState({type: "success"});
+        location.reload();
     }).catch((error) => {
         self.setState({message: "Error in saving comment. Please repeat action."});
         self.setState({type: "danger"});
@@ -169,7 +169,7 @@ class Comment extends Component {
     render() {
         return(
             <div>
-                <CommentForm feed_id={this.props.feed_id} reload={this.props.reload} />
+                <CommentForm feed_id={this.props.feed_id} />
                 <LoopComments feed_id={this.props.feed_id} comments={this.props.comments} />
             </div>
         );
