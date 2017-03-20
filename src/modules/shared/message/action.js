@@ -1,6 +1,6 @@
 import { ADD_MESSAGE, DEL_MESSAGE } from '../../../redux/actions';
 
-export const setMessage = (message = []) => {
+export const addMessage = (message = []) => {
   return {
     type: ADD_MESSAGE,
     message

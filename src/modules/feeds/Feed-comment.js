@@ -5,8 +5,7 @@ import http, { baseURL } from '../request/Request';
 import LoopComments from './LoopComments';
 import Loader from '../shared/loader/loader';
 import { showLoader } from '../shared/loader/action';
-import Message from '../shared/message/message';
-import { setMessage } from '../shared/message/action';
+import { Message, addMessage } from '../shared/message/index';
 import { getFeed } from './action';
 import store from '../../redux/store';
 
@@ -52,7 +51,7 @@ export default class Comment extends Component {
                 .then((response) => {
                     store.dispatch(showLoader(false));
                     store.dispatch(getFeed(response));
-                    store.dispatch(setMessage({
+                    store.dispatch(addMessage({
                         type: "success",
                         text: "Commet was successfully saved"
                     }));
@@ -68,7 +67,7 @@ export default class Comment extends Component {
             })
         .catch((error) => {
             store.dispatch(showLoader(false));
-            store.dispatch(setMessage({
+            store.dispatch(addMessage({
                 type: "danger",
                 text: "Error in saving comment. Please repeat action."
             }));

@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import http, { baseURL } from '../request/Request';
 
-import Message from '../shared/message/message';
+import { Message, addMessage } from '../shared/message/index';
 import { showLoader } from '../shared/loader/action';
-import { setMessage } from '../shared/message/action';
 import { getFeed } from './action';
 import store from '../../redux/store';
 
@@ -27,7 +26,7 @@ class LoopComments extends Component {
                 .then((response) => {
                     store.dispatch(showLoader(false));
                     store.dispatch(getFeed(response));
-                    store.dispatch(setMessage({
+                    store.dispatch(addMessage({
                         type: "success",
                         text: "Commet was successfully deleted"
                     }));
@@ -39,7 +38,7 @@ class LoopComments extends Component {
         .catch((error) => {
             console.log("error", error);
             store.dispatch(showLoader(false));
-            store.dispatch(setMessage({
+            store.dispatch(addMessage({
                 type: "danger",
                 text: "Error in deleting comment. Please repeat action."
             }));

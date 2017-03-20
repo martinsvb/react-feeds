@@ -3,26 +3,7 @@ import { connect } from 'react-redux';
 
 import { delMessage } from './action';
 
-const MessageComponent = (state, onMessageClick) => {
-
-  return (
-    <div>
-      {state.message.map((m, i) => (
-          <div key={i} className="col-sm-12">
-            <div className={`alert alert-${m.type}`} role="alert">
-            <button type="button" className="close" aria-label="Close" onClick={(i) => state.onMessageClick(i)}>
-                <span aria-hidden="true">×</span>
-            </button>
-            {m.text}
-            </div>
-          </div>
-        )
-      )}
-    </div>
-  );
-}
-
-export default connect((store) => {
+@connect((store) => {
   return {
     message: store.messageReducer
   };
@@ -32,4 +13,29 @@ export default connect((store) => {
       dispatch(delMessage(i));
     }
   }
-})(MessageComponent);
+})
+export class Message extends Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    
+    return (
+      <div>
+        {this.props.message.map((m, i) => (
+            <div key={i} className="col-sm-12">
+              <div className={`alert alert-${m.type}`} role="alert">
+              <button type="button" className="close" aria-label="Close" onClick={(i) => this.props.onMessageClick(i)}>
+                  <span aria-hidden="true">×</span>
+              </button>
+              {m.text}
+              </div>
+            </div>
+          )
+        )}
+      </div>
+    );
+  }
+}
