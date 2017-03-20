@@ -8,7 +8,12 @@ import { showLoader } from '../shared/loader/action';
 import { getFeed } from './action';
 import store from '../../redux/store';
 
-class ShowFeedComponent extends Component {
+@connect((store) => {
+  return {
+    feed: store.feedReducer
+  };
+})
+export default class ShowFeedComponent extends Component {
 
   constructor(props) {
       super(props);
@@ -51,13 +56,3 @@ class ShowFeedComponent extends Component {
     );
   }
 };
-
-const mapStateToProps = (store) => {
-  return {
-    feed: store.feedReducer
-  };
-};
-
-const ShowFeed = connect(mapStateToProps)(ShowFeedComponent);
-
-export default ShowFeed;

@@ -1,16 +1,15 @@
-import { SET_MESSAGE } from '../../../redux/actions';
+import { ADD_MESSAGE, DEL_MESSAGE } from '../../../redux/actions';
 
-let initMessageState = {
-  type: null,
-  text: null,
-};
-
-export const messageReducer = function(state = initMessageState, action) {
+export const messageReducer = function(state = [], action) {
 
   switch(action.type) {
 
-    case SET_MESSAGE:
-      return action.message;
+    case ADD_MESSAGE:
+      return [...state, action.message];
+    
+    case DEL_MESSAGE:
+      state.splice(action.index, 1);
+      return [...state];
 
   }
 

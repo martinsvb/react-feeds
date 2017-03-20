@@ -1,13 +1,15 @@
-import { SET_MESSAGE } from '../../../redux/actions';
+import { ADD_MESSAGE, DEL_MESSAGE } from '../../../redux/actions';
 
-let initMessageState = {
-  type: null,
-  text: null,
+export const setMessage = (message = []) => {
+  return {
+    type: ADD_MESSAGE,
+    message
+  };
 };
 
-export const setMessage = (message = initMessageState) => {
+export const delMessage = (index = null) => {
   return {
-    type: SET_MESSAGE,
-    message
+    type: DEL_MESSAGE,
+    index
   };
 };

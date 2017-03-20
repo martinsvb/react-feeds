@@ -1,34 +1,35 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setMessage } from './action';
-import store from '../../../redux/store';
+import { delMessage } from './action';
 
-const MessageComponent = (state) => {
-  
-  let message = null;
-  if (state.message.text) {
-    message = (
-      <div className="col-sm-12">
-          <div className={`alert alert-${state.message.type}`} role="alert">
-          <button type="button" className="close" aria-label="Close" onClick={() => store.dispatch(setMessage({text: null, type: null}))}>
-              <span aria-hidden="true">×</span>
-          </button>
-          {state.message.text}
+const MessageComponent = (state, onMessageClick) => {
+
+  return (
+    <div>
+      {state.message.map((m, i) => (
+          <div key={i} className="col-sm-12">
+            <div className={`alert alert-${m.type}`} role="alert">
+            <button type="button" className="close" aria-label="Close" onClick={(i) => state.onMessageClick(i)}>
+                <span aria-hidden="true">×</span>
+            </button>
+            {m.text}
+            </div>
           </div>
-      </div>
-    )
-  }
-
-  return message;
+        )
+      )}
+    </div>
+  );
 }
 
-const mapStateToProps = (store) => {
+export default connect((store) => {
   return {
     message: store.messageReducer
   };
-};
-
-const Message = connect(mapStateToProps)(MessageComponent);
-
-export default Message;
+}, (dispatch) => {
+  return {
+    onMessageClick: (i) => {
+      dispatch(delMessage(i));
+    }
+  }
+})(MessageComponent);

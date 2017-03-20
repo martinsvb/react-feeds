@@ -7,4 +7,5 @@ export const FEED_DETAIL = "FEED_DETAIL";
 export const DELETE_FEED = "DELETE_FEED";
 
 // Message
-export const SET_MESSAGE = "SET_MESSAGE";
+export const ADD_MESSAGE = "ADD_MESSAGE";
+export const DEL_MESSAGE = "DEL_MESSAGE";

@@ -19,12 +19,8 @@ const LoaderComponent = (state) => {
   return loader;
 }
 
-const mapStateToProps = (store) => {
+export default connect((store) => {
   return {
     loading: store.loaderReducer
   };
-};
-
-const Loader = connect(mapStateToProps)(LoaderComponent);
-
-export default Loader;
+})(LoaderComponent);
