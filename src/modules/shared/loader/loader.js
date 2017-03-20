@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import store from '../../../redux/store';
 
-const LoaderComponent = (state) => {
+const LoaderComponent = ({loading}) => {
   
   let loader = null;
-  if (state.loading) {
+  if (loading) {
     loader = (
       <div className="fullHeight">
         <div className="col-sm-12 fullHeight align-middle text-center">
