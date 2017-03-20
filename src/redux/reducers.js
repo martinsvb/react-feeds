@@ -1,13 +1,19 @@
 import { combineReducers } from 'redux';
 
 // Reducers
-import loaderReducer from '../modules/shared/loader/reducer';
-import feedsReducer from '../modules/feeds/reducer';
+import { loaderReducer } from '../modules/shared/loader/reducer';
+import { messageReducer } from '../modules/shared/message/reducer';
+import {
+    feedsReducer,
+    feedReducer
+} from '../modules/feeds/reducer';
 
 // Combine Reducers
 const reducers = combineReducers({
     loaderReducer,
-    feedsReducer
+    feedsReducer,
+    feedReducer,
+    messageReducer
 });
 
 export default reducers;

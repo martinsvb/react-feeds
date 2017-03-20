@@ -7,7 +7,7 @@ const LoaderComponent = (state) => {
   let loader = null;
   if (state.loading) {
     loader = (
-      <div className="row fullHeight">
+      <div className="fullHeight">
         <div className="col-sm-12 fullHeight align-middle text-center">
             <i className="fa fa-spinner fa-spin fa-3x fa-fw"></i>
             <span className="sr-only">Loading...</span>

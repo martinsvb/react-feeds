@@ -1,6 +1,6 @@
 import { SHOW_LOADER } from '../../../redux/actions';
 
-const loaderReducer = function(state = false, action) {
+export const loaderReducer = function(state = false, action) {
 
   switch(action.type) {
 
@@ -10,7 +10,4 @@ const loaderReducer = function(state = false, action) {
   }
 
   return state;
-
-}
-
-export default loaderReducer;
+};

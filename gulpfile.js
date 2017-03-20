@@ -5,6 +5,7 @@ var cleanCSS = require('gulp-clean-css');
 var uglify = require('gulp-uglify');
 var replace = require('gulp-replace');
 var runSequence = require('run-sequence');
+var sourcemaps = require('gulp-sourcemaps');
 
 var assets = "./public/assets/";
 var fonts = assets + "fonts";
@@ -26,6 +27,20 @@ gulp.task('sass', function () {
     .pipe(gulp.dest(css));
 });
 
+// Minify main.css
+gulp.task('minCss', function () {
+  return gulp.src(css + '/main.css')
+      .pipe(cleanCSS())
+      .pipe(gulp.dest(css));
+});
+
+// Default task
+gulp.task('css', function() {
+  runSequence('sass',
+              'minCss'
+  );  
+});
+
 // Build libraries
 gulp.task('libs', function () {
   return gulp.src([
@@ -41,7 +56,6 @@ gulp.task('libs', function () {
 // Default task
 gulp.task('default', function() {
   runSequence('fontAwesome',
-              'sass',
-              'libs'
+              'css'
   );  
 });

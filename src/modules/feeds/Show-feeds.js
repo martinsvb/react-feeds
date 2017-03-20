@@ -19,13 +19,13 @@ class ShowFeedsComponent extends Component{
     store.dispatch(showLoader(true));
 
     http.get(`${baseURL}`)
-    .then((response) => {
-        store.dispatch(showLoader(false));
-        store.dispatch(getFeeds(response));
-    })
-    .catch((error) => {
-        store.dispatch(showLoader(false));
-    });
+        .then((response) => {
+            store.dispatch(showLoader(false));
+            store.dispatch(getFeeds(response));
+        })
+        .catch((error) => {
+            store.dispatch(showLoader(false));
+        });
   };
 
   render() {

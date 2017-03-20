@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import { connect } from 'react-redux';
 import moment from 'moment';
-import request, { baseURL } from '../request/Request';
+import http, { baseURL } from '../request/Request';
 
-class CommentForm extends Component {
+import LoopComments from './LoopComments';
+import Loader from '../shared/loader/loader';
+import { showLoader } from '../shared/loader/action';
+import Message from '../shared/message/message';
+import { setMessage } from '../shared/message/action';
+import { getFeed } from './action';
+import store from '../../redux/store';
+
+export default class Comment extends Component {
   constructor(props) {
     super(props);
     this.state = {
         firstName: '',
         lastName: '',
-        text: 'Comment...',
-        message: '',
-        type: ''
+        text: 'Comment...'
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -22,7 +28,7 @@ class CommentForm extends Component {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
-
+    
     this.setState({
       [name]: value
     });
@@ -30,6 +36,9 @@ class CommentForm extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    
+    store.dispatch(showLoader(true));
+    
     let data = {
         "text": this.state.text,
         "person": {
@@ -38,142 +47,56 @@ class CommentForm extends Component {
         }
     }
     let self = this;
-    request({
-        POST: `${baseURL}/${this.props.feed_id}/comments`,
-        headers: {
-            "content-type": "application/json"
-        },
-        body: JSON.stringify(data)
-    }).then((data) => {
-        self.setState({message: "Commet was successfully saved"});
-        self.setState({type: "success"});
-        location.reload();
-    }).catch((error) => {
-        self.setState({message: "Error in saving comment. Please repeat action."});
-        self.setState({type: "danger"});
-    });
-  }
-
-  render() {
-
-    let requestInfo = null;
-    if (this.state.message) {
-        requestInfo = ( 
-            <div className="row">
-                <div className="col-sm-12">
-                    <div className={`alert alert-${this.state.type}`} role="alert">
-                    <button type="button" className="close" aria-label="Close" onClick={() => this.setState({message: ''})}>
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    {this.state.message}
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    return (
-      <form onSubmit={this.handleSubmit}>
-        {requestInfo}
-        <div className="form-group">
-            <input type="text" className="form-control" name="firstName" value={this.state.firstName} onChange={this.handleChange} placeholder="First Name" />
-        </div>
-        <div className="form-group">
-            <input type="text" className="form-control" name="lastName" value={this.state.lastName} onChange={this.handleChange} placeholder="Last Name" />
-        </div>
-        <div className="form-group">
-            <textarea className="form-control" name="text" rows="5" value={this.state.text} onChange={this.handleChange} />
-        </div>
-        <button type="submit" className="btn btn-warning addComment" title="Delete feed">
-            add comment
-        </button>
-      </form>
-    );
-  }
-}
-
-class LoopComments extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-        message: '',
-        type: ''
-    };
-
-    this.deleteComment = this.deleteComment.bind(this);
-  }
-
-  deleteComment(i) {
-    let self = this;
-    let comment_id = this.props.comments[i]._id;
-    request({
-        DELETE: `${baseURL}/${this.props.feed_id}/comments/${this.props.comments[i]._id}`
-    }).then((data) => {
-        self.props.comments.splice(i, 1);
-        self.setState({message: "Commet was successfully deleted"});
-        self.setState({type: "success"});
-    }).catch((error) => {
-        self.setState({message: "Error in deleting comment. Please repeat action."});
-        self.setState({type: "danger"});
-    });
+    http.post(`${baseURL}/${this.props.feed_id}/comments`, data)
+        .then((response) => {
+            http.get(`${baseURL}/${this.props.feed_id}`)
+                .then((response) => {
+                    store.dispatch(showLoader(false));
+                    store.dispatch(getFeed(response));
+                    store.dispatch(setMessage({
+                        type: "success",
+                        text: "Commet was successfully saved"
+                    }));
+                    self.setState({
+                        firstName: '',
+                        lastName: '',
+                        text: 'Comment...'
+                    });
+                })
+                .catch((error) => {
+                    store.dispatch(showLoader(false));
+                });
+            })
+        .catch((error) => {
+            store.dispatch(showLoader(false));
+            store.dispatch(setMessage({
+                type: "danger",
+                text: "Error in saving comment. Please repeat action."
+            }));
+        });
   }
     
     render() {
-        
-        let self = this;
-
-        let requestInfo = null;
-        if (this.state.message) {
-            requestInfo = ( 
-                <div className="col-sm-12">
-                    <div className={`alert alert-${this.state.type}`} role="alert">
-                    <button type="button" className="close" aria-label="Close" onClick={() => this.setState({message: ''})}>
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    {this.state.message}
-                    </div>
-                </div>
-            );
-        }
-
-        return (
-            <div className="row">
-            {requestInfo}
-            {this.props.comments.map(function(comment, i) {
-                return (
-                    <div key={i} className="col-sm-12">
-                        <div className="card feed">
-                            <div className="card-block">
-                                <img className="feed-avatar rounded-circle" src={comment.person.avatar} alt="Person avatar" />
-                                <div className="feed-body">
-                                    <h4 className="card-title">{comment.person.firstName} {comment.person.lastName}</h4>
-                                    <button type="button" className="btn btn-warning float-right" onClick={() => self.deleteComment(i)} title="Delete feed">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                    <p className="card-text feed-timestamp">{moment(comment.date).format('DD. MM. YYYY, h:mm a')}</p>
-                                    <p className="card-text feed-text">{comment.text}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-            })}
-            </div>
-        );
-    }
-};
-
-class Comment extends Component {
-    render() {
         return(
             <div>
-                <CommentForm feed_id={this.props.feed_id} />
+                <form onSubmit={this.handleSubmit}>
+                    <div className="form-group">
+                        <input type="text" className="form-control" name="firstName" value={this.state.firstName} onChange={this.handleChange} placeholder="First Name" />
+                    </div>
+                    <div className="form-group">
+                        <input type="text" className="form-control" name="lastName" value={this.state.lastName} onChange={this.handleChange} placeholder="Last Name" />
+                    </div>
+                    <div className="form-group">
+                        <textarea className="form-control" name="text" rows="5" value={this.state.text} onChange={this.handleChange} />
+                    </div>
+                    <button type="submit" className="btn btn-warning addComment" title="Delete feed">
+                        add comment
+                    </button>
+                    <Loader />
+                    <Message />
+                </form>
                 <LoopComments feed_id={this.props.feed_id} comments={this.props.comments} />
             </div>
         );
     }
 };
-
-export default Comment;

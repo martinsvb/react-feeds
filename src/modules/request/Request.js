@@ -21,7 +21,10 @@ const http = {
                 let xhr = new XMLHttpRequest();
                 
                 xhr.open(method, url);
-                
+
+                if (headers && !headers.hasOwnProperty('content')) {
+                    headers["content-type"] = "application/json";
+                }                
                 if (!headers) {
                     headers = {"content-type": "application/json"};
                 }
@@ -32,7 +35,10 @@ const http = {
                 
                 xhr.onload = () => {
                     if (xhr.status >= 200 && xhr.status < 300) {
-                        resolve(JSON.parse(xhr.response));
+                        console.log(xhr);
+                        xhr.response
+                            ? resolve(JSON.parse(xhr.response))
+                            : resolve();
                     } else {
                         reject(xhr.statusText);
                     }
