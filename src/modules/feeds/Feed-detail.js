@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Comment from './Feed-comment';
 
-import http, { baseURL } from '../request/Request';
-import Loader from '../shared/loader/loader';
-import { showLoader } from '../shared/loader/action';
+import {
+    http, baseURL, rxRes,
+    Loader, showLoader
+}
+from '../shared/index';
+
 import { getFeed } from './action';
 import store from '../../redux/store';
 
@@ -20,12 +23,13 @@ export default class ShowFeedComponent extends Component {
   }
   
   componentDidMount() {
-    http.get(`${baseURL}/${this.props.params.feed_id}`)
-        .then((response) => {
+    rxRes(http.get(`${baseURL}/${this.props.params.feed_id}`))
+        .subscribe((response) => {
             store.dispatch(showLoader(false));
             store.dispatch(getFeed(response));
-        })
-        .catch((error) => {
+        },
+        (error) => {
+            console.log(error);
             store.dispatch(showLoader(false));
         });
   };

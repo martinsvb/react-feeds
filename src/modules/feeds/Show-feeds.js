@@ -3,9 +3,12 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
-import http, { baseURL } from '../request/Request';
-import Loader from '../shared/loader/loader';
-import { showLoader } from '../shared/loader/action';
+import {
+    http, baseURL, rxRes, 
+    Loader, showLoader 
+}
+from '../shared/index';
+
 import { getFeeds } from './action';
 import store from '../../redux/store';
 
@@ -23,12 +26,13 @@ export default class ShowFeedsComponent extends Component{
   componentDidMount() {
     store.dispatch(showLoader(true));
 
-    http.get(`${baseURL}`)
-        .then((response) => {
+    rxRes(http.get(`${baseURL}`))
+        .subscribe((response) => {
             store.dispatch(showLoader(false));
             store.dispatch(getFeeds(response));
-        })
-        .catch((error) => {
+        },
+        (error) => {
+            console.log(error);
             store.dispatch(showLoader(false));
         });
   };

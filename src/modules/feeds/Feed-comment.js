@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import http, { baseURL } from '../request/Request';
+
+import {
+    http, baseURL, rxRes,
+    Loader, showLoader,
+    Message, addMessage
+}
+from '../shared/index';
 
 import LoopComments from './LoopComments';
-import Loader from '../shared/loader/loader';
-import { showLoader } from '../shared/loader/action';
-import { Message, addMessage } from '../shared/message/index';
 import { getFeed } from './action';
 import store from '../../redux/store';
 
@@ -45,10 +48,10 @@ export default class Comment extends Component {
         }
     }
     let self = this;
-    http.post(`${baseURL}/${this.props.feed_id}/comments`, data)
-        .then((response) => {
-            http.get(`${baseURL}/${this.props.feed_id}`)
-                .then((response) => {
+    rxRes(http.post(`${baseURL}/${this.props.feed_id}/comments`, data))
+        .subscribe((response) => {
+            rxRes(http.get(`${baseURL}/${this.props.feed_id}`))
+                .subscribe((response) => {
                     store.dispatch(showLoader(false));
                     store.dispatch(getFeed(response));
                     store.dispatch(addMessage({
@@ -60,12 +63,14 @@ export default class Comment extends Component {
                         lastName: '',
                         text: 'Comment...'
                     });
-                })
-                .catch((error) => {
+                },
+                (error) => {
+                    console.log(error);
                     store.dispatch(showLoader(false));
                 });
-            })
-        .catch((error) => {
+        },
+        (error) => {
+            console.log(error);
             store.dispatch(showLoader(false));
             store.dispatch(addMessage({
                 type: "danger",
@@ -90,7 +95,6 @@ export default class Comment extends Component {
                     <button type="submit" className="btn btn-warning addComment" title="Delete feed">
                         add comment
                     </button>
-                    <Loader />
                     <Message />
                 </form>
                 <LoopComments feed_id={this.props.feed_id} comments={this.props.comments} />

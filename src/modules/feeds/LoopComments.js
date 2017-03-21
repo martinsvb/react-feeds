@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import http, { baseURL } from '../request/Request';
 
-import { Message, addMessage } from '../shared/message/index';
-import { showLoader } from '../shared/loader/action';
+import {
+    http, baseURL, rxRes,
+    addMessage,
+    showLoader
+}
+from '../shared/index';
+
 import { getFeed } from './action';
 import store from '../../redux/store';
 
@@ -19,24 +23,24 @@ class LoopComments extends Component {
     
     store.dispatch(showLoader(true));
 
-    let self = this;
-    http.delete(`${baseURL}/${this.props.feed_id}/comments/${this.props.comments[i]._id}`)
-        .then((data) => {
-            http.get(`${baseURL}/${this.props.feed_id}`)
-                .then((response) => {
+    rxRes(http.delete(`${baseURL}/${this.props.feed_id}/comments/${this.props.comments[i]._id}`))
+        .subscribe((response) => {
+            rxRes(http.get(`${baseURL}/${this.props.feed_id}`))
+                .subscribe((response) => {
                     store.dispatch(showLoader(false));
                     store.dispatch(getFeed(response));
                     store.dispatch(addMessage({
                         type: "success",
                         text: "Commet was successfully deleted"
                     }));
-                })
-                .catch((error) => {
+                },
+                (error) => {
+                    console.log(error);
                     store.dispatch(showLoader(false));
                 });
-            })
-        .catch((error) => {
-            console.log("error", error);
+        },
+        (error) => {
+            console.log(error);
             store.dispatch(showLoader(false));
             store.dispatch(addMessage({
                 type: "danger",

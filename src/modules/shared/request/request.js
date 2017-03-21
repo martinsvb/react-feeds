@@ -1,6 +1,8 @@
+import { Observable } from 'rxjs/Rx';
+
 export const baseURL = "https://inloop-webproject.herokuapp.com/api/feeds";
 
-const http = {
+export const http = {
 
     get: (url, headers) => {
         return http.proccess("GET", url, headers);
@@ -51,4 +53,4 @@ const http = {
     }
 };
 
-export default http;
+export const rxRes = (promise) => Observable.fromPromise(promise);
