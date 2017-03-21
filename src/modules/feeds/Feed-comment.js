@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Button, Form, FormGroup, Input } from 'reactstrap';
 import moment from 'moment';
 
 import {
@@ -83,20 +84,18 @@ export default class Comment extends Component {
         return(
             <div>
                 <form onSubmit={this.handleSubmit}>
-                    <div className="form-group">
-                        <input type="text" className="form-control" name="firstName" value={this.state.firstName} onChange={this.handleChange} placeholder="First Name" />
-                    </div>
-                    <div className="form-group">
-                        <input type="text" className="form-control" name="lastName" value={this.state.lastName} onChange={this.handleChange} placeholder="Last Name" />
-                    </div>
-                    <div className="form-group">
-                        <textarea className="form-control" name="text" rows="5" value={this.state.text} onChange={this.handleChange} />
-                    </div>
-                    <button type="submit" className="btn btn-warning addComment" title="Delete feed">
-                        add comment
-                    </button>
-                    <Message />
+                    <FormGroup>
+                        <Input type="text" name="firstName" value={this.state.firstName} onChange={this.handleChange} placeholder="First Name" />
+                    </FormGroup>
+                    <FormGroup>
+                        <Input type="text" name="lastName" value={this.state.lastName} onChange={this.handleChange} placeholder="Last Name" />
+                    </FormGroup>
+                    <FormGroup>
+                        <Input type="textarea" rows="5" name="text" value={this.state.text} onChange={this.handleChange} />
+                    </FormGroup>
+                    <Button className="btn-warning addComment" title="Add feed">add comment</Button>
                 </form>
+                <Message />
                 <LoopComments feed_id={this.props.feed_id} comments={this.props.comments} />
             </div>
         );

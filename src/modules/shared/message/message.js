@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Alert } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import { delMessage } from './action';
@@ -23,15 +24,12 @@ export class Message extends Component {
   render() {
     
     return (
-      <div>
+      <div className="row">
         {this.props.message.map((m, i) => (
             <div key={i} className="col-sm-12">
-              <div className={`alert alert-${m.type}`} role="alert">
-              <button type="button" className="close" aria-label="Close" onClick={(i) => this.props.onMessageClick(i)}>
-                  <span aria-hidden="true">×</span>
-              </button>
-              {m.text}
-              </div>
+              <Alert color={m.type} toggle={(i) => this.props.onMessageClick(i)}>
+                {m.text}
+              </Alert>
             </div>
           )
         )}
