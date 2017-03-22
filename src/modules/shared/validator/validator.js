@@ -22,7 +22,14 @@ export class Validator {
 
       if (!rules[rule](...params)) {
         this.setInvalid();
-        return messages.en[rule];
+        
+        let message = messages.en[rule];
+
+        if (['minLength', 'maxLength'].includes(rule)) {
+          message = message.replace('%', params[0]);
+        }
+
+        return message;
       }
     };
 

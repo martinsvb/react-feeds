@@ -1,19 +1,19 @@
 export const messages = {
   en: {
-    minLength: (minLength) => "Minimal length is % characters.".replace("%", minLength),
-    maxLength: (maxLength) => "Maximal length is % characters.".replace("%", maxLength),
+    minLength: "Minimal length is % characters.",
+    maxLength: "Maximal length is % characters.",
     email: "Bad E-mail format.",
     required: "Field is required."
   },
   cz: {
-    minLength: (minLength) => "Minimální délka je % znaků.".replace("%", minLength),
-    maxLength: (maxLength) => "Maximální délka je % znaků.".replace("%", maxLength),
+    minLength: "Minimální délka je % znaků.",
+    maxLength: "Maximální délka je % znaků.",
     email: "Špatný formát E-mailové adresy.",
     required: "Pole je povinné."
   },
   sk: {
-    minLength: (minLength) => "Minimálna dĺžka je % znakov.".replace("%", minLength),
-    maxLength: (maxLength) => "Maximálna dĺžka je % znakov.".replace("%", maxLength),
+    minLength: "Minimálna dĺžka je % znakov.",
+    maxLength: "Maximálna dĺžka je % znakov.",
     email: "Zlý formát E-mailové adresy.",
     required: "Pole je povinné"
   }

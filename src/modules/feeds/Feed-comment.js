@@ -34,7 +34,7 @@ export default class Comment extends Component {
     
     let rules = {
         firstName: {
-            required: null,
+            required: [value],
             minLength: [5, value]
         }
     };
