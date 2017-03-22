@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Button, Form, FormGroup, Input } from 'reactstrap';
-import moment from 'moment';
+import { Button, FormGroup, Input, FormFeedback } from 'reactstrap';
 
 import {
     http, baseURL, rxRes,
-    Loader, showLoader,
-    Message, addMessage
+    showLoader,
+    Message, addMessage,
+    Validator
 }
 from '../shared/index';
 
@@ -18,6 +18,7 @@ export default class Comment extends Component {
     super(props);
     this.state = {
         firstName: '',
+        firstNameError: '',
         lastName: '',
         text: 'Comment...'
     };
@@ -31,9 +32,19 @@ export default class Comment extends Component {
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
     
-    this.setState({
-      [name]: value
-    });
+    let rules = {
+        firstName: {
+            required: null,
+            minLength: [5, value]
+        }
+    };
+
+    let validator = new Validator(target, rules[name]);
+    let valMessage = validator.validate();
+
+    this.setState({[`${name}Error`]: valMessage ? valMessage : ''});
+
+    this.setState({[name]: value});
   }
 
   handleSubmit(event) {
@@ -86,6 +97,7 @@ export default class Comment extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <FormGroup>
                         <Input type="text" name="firstName" value={this.state.firstName} onChange={this.handleChange} placeholder="First Name" />
+                        <FormFeedback>{this.state.firstNameError}</FormFeedback>
                     </FormGroup>
                     <FormGroup>
                         <Input type="text" name="lastName" value={this.state.lastName} onChange={this.handleChange} placeholder="Last Name" />
