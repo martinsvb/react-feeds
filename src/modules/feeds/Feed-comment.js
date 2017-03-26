@@ -21,6 +21,8 @@ export default class Comment extends Component {
         firstNameState: '',
         firstNameError: '',
         lastName: '',
+        lastNameState: '',
+        lastNameError: '',
         text: 'Comment...'
     };
 
@@ -37,6 +39,9 @@ export default class Comment extends Component {
         firstName: {
             required: [value],
             minLength: [5, value]
+        },
+        lastName: {
+            regex: [/\W/g, value]
         }
     };
 
@@ -78,6 +83,8 @@ export default class Comment extends Component {
                         firstNameState: '',
                         firstNameError: '',
                         lastName: '',
+                        lastNameState: '',
+                        lastNameError: '',
                         text: 'Comment...'
                     });
                 },
@@ -104,8 +111,9 @@ export default class Comment extends Component {
                         <Input state={this.state.firstNameState} type="text" name="firstName" value={this.state.firstName} onChange={this.handleChange} placeholder="First Name" />
                         <FormFeedback>{this.state.firstNameError}</FormFeedback>
                     </FormGroup>
-                    <FormGroup>
-                        <Input type="text" name="lastName" value={this.state.lastName} onChange={this.handleChange} placeholder="Last Name" />
+                    <FormGroup color={this.state.lastNameState}>
+                        <Input state={this.state.lastNameState} type="text" name="lastName" value={this.state.lastName} onChange={this.handleChange} placeholder="Last Name" />
+                        <FormFeedback>{this.state.lastNameError}</FormFeedback>
                     </FormGroup>
                     <FormGroup>
                         <Input type="textarea" rows="5" name="text" value={this.state.text} onChange={this.handleChange} />
