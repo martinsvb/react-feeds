@@ -116,6 +116,8 @@ $brand-success:             $green !default;
 $brand-info:                $teal !default;
 $brand-warning:             $orange !default;
 $brand-danger:              $red !default;
+$brand-danger-lighter:      lighten($brand-danger, 30%);
+$brand-danger-lightest:      lighten($brand-danger, 50%);
 $brand-inverse:             $gray-dark !default;
 
 $brand-back:                #F4E8C1 !default;

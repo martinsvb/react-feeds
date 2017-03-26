@@ -55,29 +55,6 @@ th:first-letter {
     }
 }
 
-input {
-    margin-bottom: .2rem;
-}
-
-.valid[required] {
-    border-left: .3rem solid $brand-success;
-}
-.invalid {
-    border-left: .3rem solid $brand-danger;
-}
-input[type="text"].pristine,
-input[type="number"].pristine,
-input[type="password"].pristine {
-    border-left: $input-btn-border-width solid $input-group-addon-border-color;
-    &:focus {
-        border-left: $input-btn-border-width solid $input-border-focus;
-    }
-}
-
-.input-group-addon {
-    padding-right: 1.5rem;
-}
-
 label,
 input[type="checkbox"],
 button,
@@ -95,8 +72,4 @@ button,
 }
 .disabled {
     background: $brand-danger;
-}
-
-.form-check-span {
-    margin: 0 0 .5rem .2rem;
 }

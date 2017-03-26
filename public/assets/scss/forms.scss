@@ -1,0 +1,6 @@
+.valid[required] {
+    border-left: .3rem solid $brand-success;
+}
+.invalid {
+    border-left: .3rem solid $brand-danger;
+}

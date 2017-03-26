@@ -2,30 +2,27 @@ import { messages, rules } from './index';
 
 export class Validator {
 
-  constructor(target, rules) {
-    this.target = target;
-    this.rules = rules;
-
-    this.classes = {valid: 'valid', invalid: 'invalid'};
+  constructor(validation, own = {rules: null, messages: null}) {
+    this.validation = validation;
+    this.rules = own.rules || rules;
+    this.messages = own.messages || messages;
   }
 
   validate() {
     
-    let availRules = Object.keys(rules);
+    let availRules = Object.keys(this.rules);
 
-    for (let rule in this.rules) {
-      if (!availRules.includes(rule)) {
+    for (let key in this.validation) {
+      if (!availRules.includes(key)) {
         continue;
       }
 
-      let params = this.rules[rule] || [];
+      let params = this.validation[key] || [];
 
-      if (!rules[rule](...params)) {
-        this.setInvalid();
-        
-        let message = messages.en[rule];
+      if (!this.rules[key](...params)) {
+        let message = this.messages.en[key];
 
-        if (['minLength', 'maxLength'].includes(rule)) {
+        if (['minLength', 'maxLength'].includes(key)) {
           message = message.replace('%', params[0]);
         }
 
@@ -33,26 +30,6 @@ export class Validator {
       }
     };
 
-    this.setValid();
-
     return null;
-  }
-
-  setValid() {
-    if (!this.target.classList.contains(this.classes.valid)) {
-      this.target.classList.add(this.classes.valid);
-    }
-    if (this.target.classList.contains(this.classes.invalid)) {
-      this.target.classList.remove(this.classes.invalid);
-    }
-  }
-
-  setInvalid() {
-    if (!this.target.classList.contains(this.classes.invalid)) {
-      this.target.classList.add(this.classes.invalid);
-    }
-    if (this.target.classList.contains(this.classes.valid)) {
-      this.target.classList.remove(this.classes.valid);
-    }
   }
 }

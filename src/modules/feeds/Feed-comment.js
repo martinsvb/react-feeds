@@ -18,6 +18,7 @@ export default class Comment extends Component {
     super(props);
     this.state = {
         firstName: '',
+        firstNameState: '',
         firstNameError: '',
         lastName: '',
         text: 'Comment...'
@@ -39,12 +40,14 @@ export default class Comment extends Component {
         }
     };
 
-    let validator = new Validator(target, rules[name]);
+    let validator = new Validator(rules[name]);
     let valMessage = validator.validate();
 
-    this.setState({[`${name}Error`]: valMessage ? valMessage : ''});
-
-    this.setState({[name]: value});
+    this.setState({
+        [name]: value,
+        [`${name}State`]: valMessage ? 'danger' : 'success',
+        [`${name}Error`]: valMessage ? valMessage : ''
+    });
   }
 
   handleSubmit(event) {
@@ -72,6 +75,8 @@ export default class Comment extends Component {
                     }));
                     self.setState({
                         firstName: '',
+                        firstNameState: '',
+                        firstNameError: '',
                         lastName: '',
                         text: 'Comment...'
                     });
@@ -95,8 +100,8 @@ export default class Comment extends Component {
         return(
             <div>
                 <form onSubmit={this.handleSubmit}>
-                    <FormGroup>
-                        <Input type="text" name="firstName" value={this.state.firstName} onChange={this.handleChange} placeholder="First Name" />
+                    <FormGroup color={this.state.firstNameState}>
+                        <Input state={this.state.firstNameState} type="text" name="firstName" value={this.state.firstName} onChange={this.handleChange} placeholder="First Name" />
                         <FormFeedback>{this.state.firstNameError}</FormFeedback>
                     </FormGroup>
                     <FormGroup>
