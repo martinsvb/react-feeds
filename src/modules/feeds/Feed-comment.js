@@ -41,7 +41,7 @@ export default class Comment extends Component {
             minLength: [5, value]
         },
         lastName: {
-            regex: [/\W/g, value]
+            regex: [/\W/g, value, true]
         }
     };
 

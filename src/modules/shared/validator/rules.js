@@ -8,5 +8,5 @@ export const rules = {
 
   required: (value) => value ? true : false,
 
-  regex: (r, value) => !r.test(value)
+  regex: (r, value, neg = false) => neg ? !r.test(value) : r.test(value)
 }
