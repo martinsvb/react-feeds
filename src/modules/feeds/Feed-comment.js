@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, FormGroup, Input, FormFeedback } from 'reactstrap';
 
 import {
-    http, baseURL, rxRes,
+    http, baseURL, rxHttp,
     showLoader,
     Message, addMessage,
     Validator
@@ -68,10 +68,10 @@ export default class Comment extends Component {
         }
     }
     let self = this;
-    rxRes(http.post(`${baseURL}/${this.props.feed_id}/comments`, data))
-        .subscribe((response) => {
-            rxRes(http.get(`${baseURL}/${this.props.feed_id}`))
-                .subscribe((response) => {
+    rxHttp.post(`${baseURL}/${this.props.feed_id}/comments`, data).subscribe(
+        (response) => {
+            rxHttp.get(`${baseURL}/${this.props.feed_id}`).subscribe(
+                (response) => {
                     store.dispatch(showLoader(false));
                     store.dispatch(getFeed(response));
                     store.dispatch(addMessage({
@@ -91,7 +91,8 @@ export default class Comment extends Component {
                 (error) => {
                     console.log(error);
                     store.dispatch(showLoader(false));
-                });
+                }
+            );
         },
         (error) => {
             console.log(error);
@@ -100,7 +101,8 @@ export default class Comment extends Component {
                 type: "danger",
                 text: "Error in saving comment. Please repeat action."
             }));
-        });
+        }
+    );
   }
     
     render() {

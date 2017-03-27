@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 
 import {
-    http, baseURL, rxRes,
+    http, baseURL, rxHttp,
     addMessage,
     showLoader
 }
@@ -23,9 +23,9 @@ class LoopComments extends Component {
     
     store.dispatch(showLoader(true));
 
-    rxRes(http.delete(`${baseURL}/${this.props.feed_id}/comments/${this.props.comments[i]._id}`))
-        .subscribe((response) => {
-            rxRes(http.get(`${baseURL}/${this.props.feed_id}`))
+    rxHttp.delete(`${baseURL}/${this.props.feed_id}/comments/${this.props.comments[i]._id}`).subscribe(
+        (response) => {
+            rxHttp.get(`${baseURL}/${this.props.feed_id}`)
                 .subscribe((response) => {
                     store.dispatch(showLoader(false));
                     store.dispatch(getFeed(response));
@@ -46,7 +46,8 @@ class LoopComments extends Component {
                 type: "danger",
                 text: "Error in deleting comment. Please repeat action."
             }));
-        });
+        }
+    );
   }
     
     render() {

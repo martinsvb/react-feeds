@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import Comment from './Feed-comment';
 
 import {
-    http, baseURL, rxRes,
-    Loader, showLoader
+    http, baseURL, rxHttp,
+    showLoader
 }
 from '../shared/index';
 
@@ -23,22 +23,23 @@ export default class ShowFeedComponent extends Component {
   }
   
   componentDidMount() {
-    rxRes(http.get(`${baseURL}/${this.props.params.feed_id}`))
-        .subscribe((response) => {
+    store.dispatch(showLoader(true));
+    rxHttp.get(`${baseURL}/${this.props.params.feed_id}`).subscribe(
+        (response) => {
             store.dispatch(showLoader(false));
             store.dispatch(getFeed(response));
         },
         (error) => {
             console.log(error);
             store.dispatch(showLoader(false));
-        });
+        }
+    );
   };
 
   render() {
     
     return (
         <div className="container">
-            <Loader />
             {this.props.feed &&
             <div>
                 <div className="row">

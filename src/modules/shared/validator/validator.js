@@ -18,12 +18,10 @@ export class Validator {
       }
 
       let params = this.validation[key] || [];
-      let result = this.rules[key](...params);
-console.log(params);
-console.log(key, result);
-      if (!result) {
+
+      if (!this.rules[key](...params)) {
         let message = this.messages.en[key];
-console.log("m: ", message);
+
         if (['minLength', 'maxLength'].includes(key)) {
           message = message.replace('%', params[0]);
         }

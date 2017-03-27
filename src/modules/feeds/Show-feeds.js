@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 
 import {
-    http, baseURL, rxRes, 
-    Loader, showLoader 
+    http, baseURL, rxHttp, 
+    showLoader
 }
 from '../shared/index';
 
@@ -25,41 +25,40 @@ export default class ShowFeedsComponent extends Component{
   
   componentDidMount() {
     store.dispatch(showLoader(true));
-
-    rxRes(http.get(`${baseURL}`))
-        .subscribe((response) => {
+    rxHttp.get(`${baseURL}`).subscribe(
+        (response) => {
             store.dispatch(showLoader(false));
             store.dispatch(getFeeds(response));
         },
         (error) => {
             console.log(error);
             store.dispatch(showLoader(false));
-        });
+        }
+    );
   };
 
   render() {
     
     return (
         <div className="container-fluid">
-            <Loader />
             <div className="row">
-            {this.props.feeds.map(function(feed, i) {
-                return (
-                    <div key={i} className="col-sm-12 col-md-6 col-lg-4 col-xl-3">
-                        <div className="card feed">
-                            <div className="card-block">
-                                <img className="feed-avatar rounded-circle" src={feed.person.avatar} alt="Person avatar" />
-                                <div className="feed-body">
-                                    <h4 className="card-title">{feed.person.firstName} {feed.person.lastName}</h4>
-                                    <Link to={`/feed-detail/${feed._id}`} className="btn btn-warning float-right" activeClassName="active-link" title="Add feed">Detail</Link>
-                                    <p className="card-text feed-timestamp">{moment(feed.date).format('DD. MM. YYYY, h:mm a')}</p>
-                                    <p className="card-text feed-text">{feed.text}</p>
+                {this.props.feeds.map((feed, i) => {
+                    return (
+                        <div key={i} className="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                            <div className="card feed">
+                                <div className="card-block">
+                                    <img className="feed-avatar rounded-circle" src={feed.person.avatar} alt="Person avatar" />
+                                    <div className="feed-body">
+                                        <h4 className="card-title">{feed.person.firstName} {feed.person.lastName}</h4>
+                                        <Link to={`/feed-detail/${feed._id}`} className="btn btn-warning float-right" activeClassName="active-link" title="Add feed">Detail</Link>
+                                        <p className="card-text feed-timestamp">{moment(feed.date).format('DD. MM. YYYY, h:mm a')}</p>
+                                        <p className="card-text feed-text">{feed.text}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                )
-            })}
+                    )
+                })};
             </div>
         </div>
     );

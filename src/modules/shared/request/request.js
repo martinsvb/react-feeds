@@ -53,4 +53,15 @@ export const http = {
     }
 };
 
+export const rxHttp = {
+
+    get: (url, headers) => Observable.fromPromise(http.proccess("GET", url, headers)),
+    
+    post: (url, body, headers) => Observable.fromPromise(http.proccess("POST", url, headers, body)),
+    
+    put: (url, body, headers) => Observable.fromPromise(http.proccess("PUT", url, headers, body)),
+    
+    delete: (url, headers) => Observable.fromPromise(http.proccess("DELETE", url, headers))
+}
+
 export const rxRes = (promise) => Observable.fromPromise(promise);
