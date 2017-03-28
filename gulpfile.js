@@ -55,7 +55,8 @@ gulp.task('libs', function () {
 
 // Default task
 gulp.task('default', function() {
-  runSequence('fontAwesome',
+  runSequence('libs',
+              'fontAwesome',
               'css'
   );  
 });
