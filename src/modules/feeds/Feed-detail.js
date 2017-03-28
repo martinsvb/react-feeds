@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Comment from './Feed-comment';
 
 import {
-    http, baseURL, rxHttp,
+    baseURL, rxHttp,
     showLoader
 }
 from '../shared/index';

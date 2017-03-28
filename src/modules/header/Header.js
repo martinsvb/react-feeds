@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 
+import { Message } from '../shared/index';
+
 class Header extends Component {
     render() {
         return (
@@ -15,6 +17,9 @@ class Header extends Component {
                         </Link>
                     </nav>
                 </header>
+                <div className="container">
+                    <Message />
+                </div>
                 {this.props.children}
             </div>
         );

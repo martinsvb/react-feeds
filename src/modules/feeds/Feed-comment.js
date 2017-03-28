@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Button, FormGroup, Input, FormFeedback } from 'reactstrap';
 
 import {
-    http, baseURL, rxHttp,
+    baseURL, rxHttp,
     showLoader,
-    Message, addMessage,
+    addMessage,
     Validator
 }
 from '../shared/index';
@@ -44,7 +44,7 @@ export default class Comment extends Component {
             regex: [/\W/g, value, true]
         }
     };
-
+    
     let validator = new Validator(rules[name]);
     let valMessage = validator.validate();
 
@@ -67,7 +67,7 @@ export default class Comment extends Component {
             "lastName": this.state.lastName
         }
     }
-    let self = this;
+    
     rxHttp.post(`${baseURL}/${this.props.feed_id}/comments`, data).subscribe(
         (response) => {
             rxHttp.get(`${baseURL}/${this.props.feed_id}`).subscribe(
@@ -78,7 +78,7 @@ export default class Comment extends Component {
                         type: "success",
                         text: "Commet was successfully saved"
                     }));
-                    self.setState({
+                    this.setState({
                         firstName: '',
                         firstNameState: '',
                         firstNameError: '',
@@ -110,11 +110,13 @@ export default class Comment extends Component {
             <div>
                 <form onSubmit={this.handleSubmit}>
                     <FormGroup color={this.state.firstNameState}>
-                        <Input state={this.state.firstNameState} type="text" name="firstName" value={this.state.firstName} onChange={this.handleChange} placeholder="First Name" />
+                        <Input state={this.state.firstNameState} type="text" name="firstName" value={this.state.firstName}
+                        onChange={this.handleChange} placeholder="First Name" />
                         <FormFeedback>{this.state.firstNameError}</FormFeedback>
                     </FormGroup>
                     <FormGroup color={this.state.lastNameState}>
-                        <Input state={this.state.lastNameState} type="text" name="lastName" value={this.state.lastName} onChange={this.handleChange} placeholder="Last Name" />
+                        <Input state={this.state.lastNameState} type="text" name="lastName" value={this.state.lastName}
+                        onChange={this.handleChange} placeholder="Last Name" />
                         <FormFeedback>{this.state.lastNameError}</FormFeedback>
                     </FormGroup>
                     <FormGroup>
@@ -122,7 +124,6 @@ export default class Comment extends Component {
                     </FormGroup>
                     <Button className="btn-warning addComment" title="Add feed">add comment</Button>
                 </form>
-                <Message />
                 <LoopComments feed_id={this.props.feed_id} comments={this.props.comments} />
             </div>
         );

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 
 import {
-    http, baseURL, rxHttp, 
+    baseURL, rxHttp, 
     showLoader
 }
 from '../shared/index';
