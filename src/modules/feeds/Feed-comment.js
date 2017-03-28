@@ -5,7 +5,8 @@ import {
     baseURL, rxHttp,
     showLoader,
     addMessage,
-    Validator
+    Validator,
+    Summernote
 }
 from '../shared/index';
 
@@ -120,7 +121,7 @@ export default class Comment extends Component {
                         <FormFeedback>{this.state.lastNameError}</FormFeedback>
                     </FormGroup>
                     <FormGroup>
-                        <Input type="textarea" rows="5" name="text" value={this.state.text} onChange={this.handleChange} />
+                        <Summernote name="text" value={this.state.text} onChange={this.handleChange} />
                     </FormGroup>
                     <Button className="btn-warning addComment" title="Add feed">add comment</Button>
                 </form>
@@ -128,4 +129,4 @@ export default class Comment extends Component {
             </div>
         );
     }
-};
+}
