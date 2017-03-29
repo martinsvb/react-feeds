@@ -67,7 +67,7 @@ class LoopComments extends Component {
                                             <span aria-hidden="true">×</span>
                                         </button>
                                         <p className="card-text feed-timestamp">{moment(comment.date).format('DD. MM. YYYY, h:mm a')}</p>
-                                        <p className="card-text feed-text">{comment.text}</p>
+                                        <div dangerouslySetInnerHTML={{__html: comment.text}}></div>
                                     </div>
                                 </div>
                             </div>

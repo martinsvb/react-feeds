@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
-import { baseURL, rxHttp } from '../index';
+import { rxHttp } from '../index';
 
 import 'rxjs/add/operator/toPromise';
-
-import $ from 'jquery';
-import 'tether';
-import 'bootstrap';
-import 'summernote';
 
 export class Summernote extends Component {
 
@@ -18,11 +13,11 @@ export class Summernote extends Component {
         };
 
         this.initialized = false;
+
+        this.editable = this.props.disable ? false : true;
     }
 
     componentDidMount() {
-        this.summernote = window.summernote;
-        
         if (!this.initialized) {
             
             let config = this.props.config || {
@@ -33,19 +28,19 @@ export class Summernote extends Component {
                 focus: this.props.focus,
                 airMode: this.props.airMode,
                 dialogsInBody: this.props.dialogsInBody,
-                editable: this.props.editable,
+                editable: this.editable,
                 lang: 'en-US',
                 disableResizeEditor: this.props.disableResizeEditor
             };
             
             config.callbacks = {
-                onChange: (content) => this.props.onChange && this.props.onChange(content),
-                onInit: (evt) => this.props.onChange && this.props.onChange(evt)
+                onChange: (value, name) => this.props.onChange && this.props.onChange(value, this.props.name),
+                onInit: (evt) => this.props.onInit && this.props.onInit(evt)
             };
 
-            if (this.props.serverImgUp) {
+            if (this.props.upload) {
                 config.callbacks.onImageUpload = (files) => {
-                    this.imageUpload({files: files, editable: this.props.editable});
+                    this.imageUpload({files, editable: this.editable});
                 };
                 config.callbacks.onMediaDelete = (target) => {
                     let fileUrl;
@@ -89,11 +84,11 @@ export class Summernote extends Component {
             data.append("file", dataUpload.files[0]);
             data.append("action", "upload");
             data.append("image", "resizeNoThumb");
-            data.append("folder", this.uploadFolder);
+            data.append("folder", this.props.upload.folder);
             $.post({
                 data: data,
                 type: "POST",
-                url: this.hostUpload,
+                url: this.props.upload.host,
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -113,9 +108,9 @@ export class Summernote extends Component {
             file: fileUrl
         });
         
-        return this._http.post(this.hostUpload, data)
-                .toPromise()
-                .then((response) => response)
-                .catch((err) => Promise.reject(err.message || err));
+        return rxHttp.post(this.props.upload.host, data).subscribe(
+            (response) => response,
+            (error) => { console.log("error :", error) }
+        )
     }
 }

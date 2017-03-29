@@ -33,19 +33,14 @@ gulp.task('sass', function () {
 gulp.task('minCss', function () {
   
   gulp.src([
+    css + '/main.css',
     './node_modules/summernote/dist/summernote.css'
   ])
-  .pipe(replace('url("font', 'url("../assets/fonts'))
-  .pipe(gulp.dest(css));
-  
-  gulp.src([
-    css + '/main.css',
-    css + '/summernote.css'
-  ])
-  .pipe(concat('main.css'))
+  .pipe(replace('url("font/summernote', 'url("../fonts/summernote'))
+  .pipe(concat('style.css'))
   .pipe(gulp.dest(css));
 
-  return gulp.src(css + '/main.css')
+  return gulp.src(css + '/style.css')
       .pipe(cleanCSS())
       .pipe(gulp.dest(css));
 });

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, FormGroup, Input, FormFeedback } from 'reactstrap';
 
 import {
-    baseURL, rxHttp,
+    baseURL, hostUpload, rxHttp,
     showLoader,
     addMessage,
     Validator,
@@ -24,7 +24,8 @@ export default class Comment extends Component {
         lastName: '',
         lastNameState: '',
         lastNameError: '',
-        text: 'Comment...'
+        text: 'Comment...',
+        uploadFolder: "test_company/news"
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -56,6 +57,12 @@ export default class Comment extends Component {
     });
   }
 
+  handleSummernote(value, name) {
+    this.setState({
+        [name]: value
+    });
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     
@@ -68,7 +75,6 @@ export default class Comment extends Component {
             "lastName": this.state.lastName
         }
     }
-    
     rxHttp.post(`${baseURL}/${this.props.feed_id}/comments`, data).subscribe(
         (response) => {
             rxHttp.get(`${baseURL}/${this.props.feed_id}`).subscribe(
@@ -121,7 +127,7 @@ export default class Comment extends Component {
                         <FormFeedback>{this.state.lastNameError}</FormFeedback>
                     </FormGroup>
                     <FormGroup>
-                        <Summernote name="text" value={this.state.text} onChange={this.handleChange} />
+                        <Summernote name="text" value={this.state.text} onChange={(value, name) => this.handleSummernote(value, name)} upload={{host: hostUpload, folder: this.state.uploadFolder}} />
                     </FormGroup>
                     <Button className="btn-warning addComment" title="Add feed">add comment</Button>
                 </form>

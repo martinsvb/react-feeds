@@ -2,6 +2,12 @@ import { Observable } from 'rxjs/Rx';
 
 export const baseURL = "https://inloop-webproject.herokuapp.com/api/feeds";
 
+export const host = 'http://www.spanielovasvj.cz';
+
+export const hostApi = `${host}/api`;
+
+export const hostUpload = `${hostApi}/upload`;
+
 export const http = {
 
     get: (url, headers) => {
