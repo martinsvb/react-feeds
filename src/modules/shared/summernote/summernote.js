@@ -61,12 +61,9 @@ export class Summernote extends Component {
 
     render() {
         
-        const { id } = this.state;
-        const classString = `summernote ${id}`;
-        
         return (
             <div>
-                <div className={classString} dangerouslySetInnerHTML={{__html: this.props.value}} ></div>
+                <div className={`summernote ${this.state.id}`} dangerouslySetInnerHTML={{__html: this.props.value}} ></div>
             </div>
         );
     }

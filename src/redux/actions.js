@@ -9,3 +9,6 @@ export const DELETE_FEED = "DELETE_FEED";
 // Message
 export const ADD_MESSAGE = "ADD_MESSAGE";
 export const DEL_MESSAGE = "DEL_MESSAGE";
+
+// Language
+export const SET_LANG = "SET_LANG";

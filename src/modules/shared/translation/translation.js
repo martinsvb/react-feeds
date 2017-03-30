@@ -1,4 +1,5 @@
-export const gettranslation = (lang) => {
+/** Translation component */
+export const getLang = (lang = null) => {
   let userLang = lang || navigator.language.split('-')[0]; // use navigator lang if available
   let availLangs = Object.keys(translation);
 
@@ -6,7 +7,12 @@ export const gettranslation = (lang) => {
     userLang = 'en';
   }
 
-  return translation[userLang];
+  return  userLang;
+};
+
+export const getTranslation = (lang) => {
+
+  return translation[lang];
 };
 
 export const regex = {

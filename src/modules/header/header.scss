@@ -1,6 +1,6 @@
 header {
     width: 100%;
-    padding: 1rem;
+    padding: .2rem 1rem;
     margin: 0 0 1rem 0;
     background: $gray-lightest;
 }
@@ -52,5 +52,46 @@ header {
                 padding: 0 .2rem;
             }
         }
+    }
+}
+
+.right-box {
+    float: right;
+}
+
+.lang-nav,
+.user-nav {
+
+    &-name {
+        display: none;
+    }
+    &-name-mobile {
+        display: inline-block;
+    }
+
+    /** Medium screens */
+    @include media-breakpoint-up(md) {
+        &-name {
+            display: inline-block;
+        }
+        &-name-mobile {
+            display: none;
+        }
+    }
+
+    a: {
+        line-height: 2.9rem;
+    }
+
+    .dropdown-menu {
+        right: 10px;
+    }
+}
+
+.lang-nav {
+
+    &-img {
+        width: 1.5rem;
+        height: auto;
     }
 }

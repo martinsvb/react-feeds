@@ -17681,3 +17681,7 @@ header {
     height: 2rem;
     margin: auto;
     color: #464a4c; }
+
+.note-link-popover,
+.note-image-popover {
+  display: none !important; }

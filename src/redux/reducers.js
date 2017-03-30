@@ -1,15 +1,21 @@
 import { combineReducers } from 'redux';
 
 // Reducers
-import { loaderReducer } from '../modules/shared/loader/reducer';
-import { messageReducer } from '../modules/shared/message/reducer';
+import {
+    langReducer,
+    loaderReducer,
+    messageReducer
+}
+from '../modules/shared/index';
 import {
     feedsReducer,
     feedReducer
-} from '../modules/feeds/reducer';
+}
+from '../modules/feeds/reducer';
 
 // Combine Reducers
 const reducers = combineReducers({
+    langReducer,
     loaderReducer,
     feedsReducer,
     feedReducer,
