@@ -1,7 +1,5 @@
-import React, { Component } from 'react';
-import { rxHttp } from '../index';
-
-import 'rxjs/add/operator/toPromise';
+import React, { Component, PropTypes } from 'react';
+import { rxHttp, loggerErr } from '../index';
 
 export class Summernote extends Component {
 
@@ -43,16 +41,11 @@ export class Summernote extends Component {
                     this.imageUpload({files, editable: this.editable});
                 };
                 config.callbacks.onMediaDelete = (target) => {
-                    let fileUrl;
-                    let attributes = target[0].attributes;
-                    for (let i = 0; i < attributes.length; i++) {
-                        if (attributes[i].name == "src") {
-                            fileUrl = attributes[i].value;
-                        }
-                    }
-                    this.mediaDelete(fileUrl)
-                        .then((resp) => { console.log(resp.json().data) })
-                        .catch((err) => { console.log("error: ", err) });
+                    let fileUrl = target[0].attributes.filter((attr) => attr.name == "src");
+                    this.mediaDelete(fileUrl.value).subscribe(
+                        (response) => response,
+                        (error) => { loggerErr("Summernote, mediaDelete", error) }
+                    );
                 };
             }
 
@@ -95,9 +88,8 @@ export class Summernote extends Component {
                 success: (uploadedImg) => {
                     let insertImg = $('<img style="width: 100%;" src="' + uploadedImg.data[0].fileName + '" />');
                     $('.'+this.state.id).summernote('insertNode', insertImg[0]);
-                    console.log("Uploaded image: " + uploadedImg.data[0]);
                 },
-                error: (err) => { console.log("error: ", err) }
+                error: (error) => { loggerErr("Summernote, imageUpload", error) }
             });
         }
     }
@@ -108,9 +100,22 @@ export class Summernote extends Component {
             file: fileUrl
         });
         
-        return rxHttp.post(this.props.upload.host, data).subscribe(
-            (response) => response,
-            (error) => { console.log("error :", error) }
-        )
+        return rxHttp.post(this.props.upload.host, data);
     }
 }
+
+Summernote.propTypes = {
+    value: PropTypes.string,
+    defaultValue: PropTypes.string,
+    height: PropTypes.number,
+    minHeight: PropTypes.number,
+    maxHeight: PropTypes.number,
+    placeholder: PropTypes.string,
+    focus: PropTypes.bool,
+    airMode: PropTypes.bool,
+    dialogsInBody: PropTypes.bool,
+    disable: PropTypes.bool,
+    lang: PropTypes.string,
+    disableResizeEditor: PropTypes.bool,
+    upload: PropTypes.object                    // {host: string, folder: string}
+};

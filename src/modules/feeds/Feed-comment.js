@@ -127,7 +127,9 @@ export default class Comment extends Component {
                         <FormFeedback>{this.state.lastNameError}</FormFeedback>
                     </FormGroup>
                     <FormGroup>
-                        <Summernote name="text" value={this.state.text} onChange={(value, name) => this.handleSummernote(value, name)} upload={{host: hostUpload, folder: this.state.uploadFolder}} />
+                        <Summernote name="text" value={this.state.text} onChange={(value, name) => this.handleSummernote(value, name)}
+                        upload={{host: hostUpload, folder: this.state.uploadFolder}}
+                        height="500" />
                     </FormGroup>
                     <Button className="btn-warning addComment" title="Add feed">add comment</Button>
                 </form>
