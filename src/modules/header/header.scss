@@ -3,12 +3,15 @@ header {
     padding: .2rem 1rem;
     margin: 0 0 1rem 0;
     background: $gray-lightest;
+    @include app-shadow(0, .2rem, .2rem, -.1rem);
 }
 
 .app-nav {
     
     /** Mobile first */
     margin: 1rem 0 .5rem 0;
+    display: inline-block;
+
     &-link {
         display: inline-block;
         line-height: 2rem;
@@ -62,6 +65,10 @@ header {
 .lang-nav,
 .user-nav {
 
+    button: {
+        border: 0 !important;
+    }
+    
     &-name {
         display: none;
     }

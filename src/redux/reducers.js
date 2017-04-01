@@ -4,7 +4,8 @@ import { combineReducers } from 'redux';
 import {
     langReducer,
     loaderReducer,
-    messageReducer
+    messageReducer,
+    transReducer
 }
 from '../modules/shared/index';
 import {
@@ -19,7 +20,8 @@ const reducers = combineReducers({
     loaderReducer,
     feedsReducer,
     feedReducer,
-    messageReducer
+    messageReducer,
+    transReducer
 });
 
 export default reducers;

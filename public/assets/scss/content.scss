@@ -73,3 +73,9 @@ button,
 .disabled {
     background: $brand-danger;
 }
+
+.noBorder,
+.noBorder:hover {
+    border: 0;
+    background: transparent;
+}
