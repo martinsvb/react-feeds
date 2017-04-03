@@ -17592,6 +17592,12 @@ button,
   .required-danger {
     color: #d9534f; }
 
+.ownButton {
+  width: 100%;
+  border-radius: 2rem;
+  text-transform: uppercase;
+  margin-bottom: 1rem; }
+
 header {
   width: 100%;
   padding: .2rem 1rem;
@@ -17700,12 +17706,6 @@ header {
   .feed-detail-text {
     color: #212738;
     text-align: justify; }
-
-.addComment {
-  width: 100%;
-  border-radius: 2rem;
-  text-transform: uppercase;
-  margin-bottom: 1rem; }
 
 .loader {
   display: flex;

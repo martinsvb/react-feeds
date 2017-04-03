@@ -5,6 +5,7 @@ import Header from './modules/header/Header';
 import Home from './modules/home/Home';
 import ShowFeeds from './modules/feeds/Show-feeds';
 import FeedDetail from './modules/feeds/Feed-detail';
+import { Login } from './modules/login/login';
 
 import { Loader } from './modules/shared/index';
 
@@ -16,9 +17,10 @@ class App extends Component {
                 <Router history={hashHistory}>
                     <Route path="/" component={Header}>
                         <IndexRoute component={Home} />
-                        <Route path="/:lang/home" component={Home}/>
-                        <Route path="/:lang/show-feeds" component={ShowFeeds}/>
-                        <Route path="/:lang/feed-detail/:feed_id" component={FeedDetail}/>
+                        <Route path="/:lang/home" component={Home} />
+                        <Route path="/:lang/show-feeds" component={ShowFeeds} />
+                        <Route path="/:lang/feed-detail/:feed_id" component={FeedDetail} />
+                        <route path="/:lang/login" component={Login} />
                     </Route>
                 </Router>
             </div>

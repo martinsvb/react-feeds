@@ -22,15 +22,18 @@ class Header extends Component {
         this.lang = getLang(this.props.params['lang']);
         this.transDispatch();
 
+        this.logout();
+
         this.toggle = this.toggle.bind(this);
         this.state = {
-            dropdownOpen: false
+            langDropDown: false,
+            userDropDown: false
         };
     }
 
-    toggle() {
+    toggle(dropDown) {
         this.setState({
-            dropdownOpen: !this.state.dropdownOpen
+            [dropDown]: !this.state[dropDown]
         });
     }
 
@@ -43,6 +46,15 @@ class Header extends Component {
         this.tr = getTranslation(this.lang);
         store.dispatch(setLang(this.lang));
         store.dispatch(setTrans(this.tr));
+    }
+
+    logout() {
+        this.user = {
+            name: 'guest',
+            email: 'guest@guest.cz',
+            role: 'guest',
+            modules: {}
+        };
     }
 
     render() {
@@ -62,7 +74,34 @@ class Header extends Component {
                             </nav>
                             
                             <div className="right-box">
-                                <Dropdown className="lang-nav" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                                <Dropdown className="user-nav" isOpen={this.state.userDropDown} toggle={() => this.toggle('userDropDown')}>
+                                    <DropdownToggle className="noBorder" caret>
+                                        <i className="fa fa-user" aria-hidden="true"></i>
+                                        <span className="user-nav-name">&nbsp;{this.user.name}</span>
+                                    </DropdownToggle>
+                                        {this.user.role == 'guest' &&
+                                        <DropdownMenu>
+                                            <DropdownItem title={this.tr.login}><Link to={`/${this.lang}/login`}>
+                                                <span>{this.tr.login}</span>
+                                            </Link></DropdownItem>
+                                            <DropdownItem title={this.tr.register}><Link to={`/${this.lang}/register`}>
+                                                <span>{this.tr.register}</span>
+                                            </Link></DropdownItem>
+                                        </DropdownMenu>
+                                        }
+                                        {(this.user.role == 'user' || this.user.role == 'admin') &&
+                                        <DropdownMenu>
+                                            <DropdownItem title={this.tr.profile}><Link to={`/${this.lang}/profile`}>
+                                                <span>{this.tr.profile}</span>
+                                            </Link></DropdownItem>
+                                            <DropdownItem onClick={() => this.logout()} title={this.tr.logout}>
+                                                <span>{this.tr.logout}</span>
+                                            </DropdownItem>
+                                        </DropdownMenu>
+                                        }
+                                </Dropdown>
+
+                                <Dropdown className="lang-nav" isOpen={this.state.langDropDown} toggle={() => this.toggle('langDropDown')}>
                                     <DropdownToggle className="noBorder" caret>
                                         <img src={`/assets/img/flags/${this.lang}.png`} className="img-rounded lang-nav-img" />
                                         <span className="lang-nav-name">&nbsp;{this.tr[this.lang]}</span>

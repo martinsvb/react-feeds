@@ -3,6 +3,7 @@ export const messages = {
     minLength: "Minimal length is % characters.",
     maxLength: "Maximal length is % characters.",
     email: "Bad E-mail format.",
+    emailSimple: "Bad E-mail format.",
     required: "Field is required.",
     regex: "Value doesn't matched string pattern."
   },
@@ -10,6 +11,7 @@ export const messages = {
     minLength: "Minimální délka je % znaků.",
     maxLength: "Maximální délka je % znaků.",
     email: "Špatný formát E-mailové adresy.",
+    emailSimple: "Špatný formát E-mailové adresy.",
     required: "Pole je povinné.",
     regex: "Hodnota neodpovídá požadovanému vzoru."
   },
@@ -17,6 +19,7 @@ export const messages = {
     minLength: "Minimálna dĺžka je % znakov.",
     maxLength: "Maximálna dĺžka je % znakov.",
     email: "Zlý formát E-mailové adresy.",
+    emailSimple: "Zlý formát E-mailové adresy.",
     required: "Pole je povinné",
     regex: "Hodnota nezodpovedá požadovanému vzoru."
   }
