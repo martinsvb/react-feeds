@@ -20,25 +20,31 @@ import store from '../../redux/store';
     tr: store.transReducer
   };
 })
-export class Login extends Component {
+export class Register extends Component {
   
     constructor(props) {
         super(props);
 
         this.state = {
+          'name': '',
+          'nameState': '',
+          'nameError': '',
           'email': '',
           'emailState': '',
           'emailError': '',
           'password': '',
           'passwordState': '',
-          'passwordError': ''
+          'passwordError': '',
+          'repassword': '',
+          'repasswordState': '',
+          'repasswordError': ''
         };
 
-      this.handleChange = this.handleChange.bind(this);
-      this.login = this.login.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.register = this.register.bind(this);
     }
 
-    login(event) {
+    register(event) {
       event.preventDefault();
       
       store.dispatch(showLoader(true));
@@ -46,39 +52,44 @@ export class Login extends Component {
       let data = [{
           "email": this.state.email,
           "password": this.state.password
-      }]
-      rxHttp.post(`${baseURL}/login`, data).subscribe(
+      }];
+      rxHttp.post(`${baseURL}/register`, data).subscribe(
           (response) => {
               let type = '';
               let text = '';
               store.dispatch(showLoader(false));
-              if (response.hasOwnProperty("loginWarning")) {
-                type = "danger";
-                text = response.loginWarning === "userNotExists"
-                    ? this.props.tr.userNotExists(this.state.email)
-                    : this.props.tr[response.loginWarning];
+              if (response.hasOwnProperty("warning")) {
+                  type = "danger";
+                  text = this.props.tr[response.warning];
               }
 
-              if (response.hasOwnProperty("loginInfo")) {
-                if (response.loginInfo === 1) {
-                  this.user = response;
-                  console.log(this.user);
+              if (response.hasOwnProperty("info")) {
+                if (response.info === 1) {
+                  type = "success";
+                  text = this.props.tr.userRegistered;
+
+                  this.setState({
+                    name: '',
+                    email: '',
+                    password: '',
+                    repassword: ''
+                  });
                 }
 
-                if (response.loginInfo === 0) {
-                      type = "danger";
-                      text = this.props.tr.userNotLogged;
+                if (response.info === 0) {
+                  type = "danger";
+                  text = this.props.tr.userRegistrationError;
                 }
               }
 
               store.dispatch(addMessage({type, text}));
           },
           (error) => {
-              loggerErr("Login, login", error);
+              loggerErr("Register, register", error);
               store.dispatch(showLoader(false));
               store.dispatch(addMessage({
                   type: "danger",
-                  text: this.props.tr.userNotLogged
+                  text: this.props.tr.userRegistrationError
               }));
           }
       );
@@ -90,11 +101,19 @@ export class Login extends Component {
       const name = target.name;
       
       let rules = {
+          name: {
+              required: [value],
+              minLength: [3, value]
+          },
           email: {
               required: [value],
               emailSimple: [value]
           },
           password: {
+              required: [value],
+              minLength: [5, value]
+          },
+          repassword: {
               required: [value],
               minLength: [5, value]
           }
@@ -114,8 +133,13 @@ export class Login extends Component {
 
         return (
           <div className="container">    
-              <h1>{this.props.tr.login}</h1>
-              <form onSubmit={this.login}>
+              <h1>{this.props.tr.register}</h1>
+              <form onSubmit={this.register}>
+                  <FormGroup color={this.state.nameState}>
+                      <Input state={this.state.nameState} type="text" name="name" value={this.state.name}
+                      onChange={this.handleChange} placeholder={this.props.tr.name} />
+                      <FormFeedback>{this.state.nameError}</FormFeedback>
+                  </FormGroup>
                   <FormGroup color={this.state.emailState}>
                       <Input state={this.state.emailState} type="text" name="email" value={this.state.email}
                       onChange={this.handleChange} placeholder={this.props.tr.email} />
@@ -126,12 +150,14 @@ export class Login extends Component {
                       onChange={this.handleChange} placeholder={this.props.tr.password} />
                       <FormFeedback>{this.state.passwordError}</FormFeedback>
                   </FormGroup>
+                  <FormGroup color={this.state.repasswordState}>
+                      <Input state={this.state.repasswordState} type="text" name="repassword" value={this.state.repassword}
+                      onChange={this.handleChange} placeholder={this.props.tr.repassword} />
+                      <FormFeedback>{this.state.repasswordError}</FormFeedback>
+                  </FormGroup>
                   <Row>
-                    <Col xs="12" md="6">
+                    <Col md="12">
                       <Button color="success" className="ownButton" title={this.props.tr.submit}>{this.props.tr.submit}</Button>
-                    </Col>
-                    <Col xs="12" md="6">
-                      <Link className="ownButton" to={`/${this.props.lang}/register`}>{this.props.tr.register}</Link>
                     </Col>
                   </Row>
               </form>

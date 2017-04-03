@@ -81,21 +81,21 @@ class Header extends Component {
                                     </DropdownToggle>
                                         {this.user.role == 'guest' &&
                                         <DropdownMenu>
-                                            <DropdownItem title={this.tr.login}><Link to={`/${this.lang}/login`}>
-                                                <span>{this.tr.login}</span>
-                                            </Link></DropdownItem>
-                                            <DropdownItem title={this.tr.register}><Link to={`/${this.lang}/register`}>
-                                                <span>{this.tr.register}</span>
-                                            </Link></DropdownItem>
+                                            <DropdownItem title={this.tr.login}>
+                                                <Link to={`/${this.lang}/login`}>{this.tr.login}</Link>
+                                            </DropdownItem>
+                                            <DropdownItem title={this.tr.register}>
+                                                <Link to={`/${this.lang}/register`}>{this.tr.register}</Link>
+                                            </DropdownItem>
                                         </DropdownMenu>
                                         }
                                         {(this.user.role == 'user' || this.user.role == 'admin') &&
                                         <DropdownMenu>
-                                            <DropdownItem title={this.tr.profile}><Link to={`/${this.lang}/profile`}>
-                                                <span>{this.tr.profile}</span>
-                                            </Link></DropdownItem>
+                                            <DropdownItem title={this.tr.profile}>
+                                                <Link to={`/${this.lang}/profile`}>{this.tr.profile}</Link>
+                                            </DropdownItem>
                                             <DropdownItem onClick={() => this.logout()} title={this.tr.logout}>
-                                                <span>{this.tr.logout}</span>
+                                                {this.tr.logout}
                                             </DropdownItem>
                                         </DropdownMenu>
                                         }
