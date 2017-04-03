@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Row, Col, Button, FormGroup, Input, FormFeedback } from 'reactstrap';
 
 import {
-    baseURL, hostUpload, rxHttp,
+    hostApi, hostUpload, rxHttp,
     showLoader,
     addMessage,
     Validator,
@@ -51,9 +51,10 @@ export class Register extends Component {
       
       let data = [{
           "email": this.state.email,
-          "password": this.state.password
+          "password": this.state.password,
+          "repassword": this.state.repassword
       }];
-      rxHttp.post(`${baseURL}/register`, data).subscribe(
+      rxHttp.post(`${hostApi}/register`, data).subscribe(
           (response) => {
               let type = '';
               let text = '';
@@ -146,12 +147,12 @@ export class Register extends Component {
                       <FormFeedback>{this.state.emailError}</FormFeedback>
                   </FormGroup>
                   <FormGroup color={this.state.passwordState}>
-                      <Input state={this.state.passwordState} type="text" name="password" value={this.state.password}
+                      <Input state={this.state.passwordState} type="password" name="password" value={this.state.password}
                       onChange={this.handleChange} placeholder={this.props.tr.password} />
                       <FormFeedback>{this.state.passwordError}</FormFeedback>
                   </FormGroup>
                   <FormGroup color={this.state.repasswordState}>
-                      <Input state={this.state.repasswordState} type="text" name="repassword" value={this.state.repassword}
+                      <Input state={this.state.repasswordState} type="password" name="repassword" value={this.state.repassword}
                       onChange={this.handleChange} placeholder={this.props.tr.repassword} />
                       <FormFeedback>{this.state.repasswordError}</FormFeedback>
                   </FormGroup>

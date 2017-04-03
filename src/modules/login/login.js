@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Row, Col, Button, FormGroup, Input, FormFeedback } from 'reactstrap';
 
 import {
-    baseURL, hostUpload, rxHttp,
+    hostApi, hostUpload, rxHttp,
     showLoader,
     addMessage,
     Validator,
@@ -47,7 +47,7 @@ export class Login extends Component {
           "email": this.state.email,
           "password": this.state.password
       }]
-      rxHttp.post(`${baseURL}/login`, data).subscribe(
+      rxHttp.post(`${hostApi}/login`, data).subscribe(
           (response) => {
               let type = '';
               let text = '';
@@ -122,7 +122,7 @@ export class Login extends Component {
                       <FormFeedback>{this.state.emailError}</FormFeedback>
                   </FormGroup>
                   <FormGroup color={this.state.passwordState}>
-                      <Input state={this.state.passwordState} type="text" name="password" value={this.state.password}
+                      <Input state={this.state.passwordState} type="password" name="password" value={this.state.password}
                       onChange={this.handleChange} placeholder={this.props.tr.password} />
                       <FormFeedback>{this.state.passwordError}</FormFeedback>
                   </FormGroup>
