@@ -19,7 +19,7 @@ export class Validator {
       if (!this.rules[key](...params)) {
         let message = this.messages[key];
 
-        if (['minLength', 'maxLength'].includes(key)) {
+        if (['minLength', 'maxLength', 'pair'].includes(key)) {
           message = message.replace('%', params[0]);
         }
 

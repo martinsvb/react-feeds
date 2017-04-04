@@ -8,6 +8,8 @@ export const rules = {
 
   emailSimple: (email) => /(\w)+@[A-Za-z]+\.[A-Za-z]{2,}/.test(email),
 
+  pair: (name, secValue, value) => value === secValue,
+
   required: (value) => value ? true : false,
 
   regex: (r, value, neg = false) => neg ? !r.test(value) : r.test(value)

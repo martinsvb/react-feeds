@@ -37,9 +37,12 @@ export const http = {
                 
                 xhr.onload = () => {
                     if (xhr.status >= 200 && xhr.status < 300) {
-                        xhr.response
-                            ? resolve(JSON.parse(xhr.response))
-                            : resolve();
+                        let data = null;
+                        if (xhr.response) {
+                            body = JSON.parse(xhr.response);
+                            data = body.data || body || {};
+                        }
+                        resolve(data);
                     } else {
                         reject(xhr.statusText);
                     }

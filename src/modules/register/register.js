@@ -30,6 +30,8 @@ export class Register extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.register = this.register.bind(this);
+        this.initModel = this.initModel.bind(this);
+        this.initValidation = this.initValidation.bind(this);
     }
 
     initModel() {
@@ -55,7 +57,6 @@ export class Register extends Component {
       event.preventDefault();
       
       store.dispatch(showLoader(true));
-      
       rxHttp.post(`${hostApi}/register`, [this.model]).subscribe(
           (response) => {
               let type = '';
@@ -72,6 +73,8 @@ export class Register extends Component {
                   text = this.props.tr.userRegistered;
 
                   this.initModel();
+                  this.initValidation();
+                  this.forceUpdate();
                 }
 
                 if (response.info === 0) {
@@ -115,7 +118,8 @@ export class Register extends Component {
           },
           repassword: {
               required: [this.model.repassword],
-              minLength: [5, this.model.repassword]
+              minLength: [5, this.model.repassword],
+              pair: [this.props.tr.password, this.model.password, this.model.repassword]
           }
       };
       

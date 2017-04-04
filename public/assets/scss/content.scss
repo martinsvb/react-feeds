@@ -79,3 +79,15 @@ button,
     border: 0;
     background: transparent;
 }
+
+.margin-bottom {
+    &-sm {
+        margin-bottom: .2rem;
+    }
+    &-md {
+        margin-bottom: .5rem;
+    }
+    &-lg {
+        margin-bottom: .8rem;
+    }
+}
