@@ -25,17 +25,21 @@ export class Login extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
+        this.model = {
           'email': '',
-          'emailState': '',
-          'emailError': '',
-          'password': '',
-          'passwordState': '',
-          'passwordError': ''
+          'password': ''
         };
 
-      this.handleChange = this.handleChange.bind(this);
-      this.login = this.login.bind(this);
+        this.validation = {
+          'emailState': '',
+          'emailError': '',
+          'passwordState': '',
+          'passwordError': '',
+          'valid': false
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.login = this.login.bind(this);
     }
 
     login(event) {
@@ -43,10 +47,7 @@ export class Login extends Component {
       
       store.dispatch(showLoader(true));
       
-      let data = [{
-          "email": this.state.email,
-          "password": this.state.password
-      }]
+      let data = [this.model];
       rxHttp.post(`${hostApi}/login`, data).subscribe(
           (response) => {
               let type = '';
@@ -55,7 +56,7 @@ export class Login extends Component {
               if (response.hasOwnProperty("loginWarning")) {
                 type = "danger";
                 text = response.loginWarning === "userNotExists"
-                    ? this.props.tr.userNotExists(this.state.email)
+                    ? this.props.tr.userNotExists(this.model.email)
                     : this.props.tr[response.loginWarning];
               }
 
@@ -88,26 +89,28 @@ export class Login extends Component {
       const target = event.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
-      
+
+      this.model[name] = value;
+
       let rules = {
           email: {
-              required: [value],
-              emailSimple: [value]
+              required: [this.model.email],
+              emailSimple: [this.model.email]
           },
           password: {
-              required: [value],
-              minLength: [5, value]
+              required: [this.model.password],
+              minLength: [5, this.model.password]
           }
       };
-      
-      let validator = new Validator(rules[name], this.props.lang);
-      let valMessage = validator.validate();
 
-      this.setState({
-          [name]: value,
-          [`${name}State`]: valMessage ? 'danger' : 'success',
-          [`${name}Error`]: valMessage ? valMessage : ''
-      });
+      let validator = new Validator(this.props.lang);
+      let valMessage = validator.validate(rules[name]);
+
+      this.validation.valid = validator.formValid(rules);
+      this.validation[`${name}State`] = valMessage ? 'danger' : 'success';
+      this.validation[`${name}Error`] = valMessage ? valMessage : '';
+
+      this.forceUpdate();
     }
 
     render() {
@@ -116,19 +119,19 @@ export class Login extends Component {
           <div className="container">    
               <h1>{this.props.tr.login}</h1>
               <form onSubmit={this.login}>
-                  <FormGroup color={this.state.emailState}>
-                      <Input state={this.state.emailState} type="text" name="email" value={this.state.email}
+                  <FormGroup color={this.validation.emailState}>
+                      <Input state={this.validation.emailState} type="text" name="email" value={this.model.email}
                       onChange={this.handleChange} placeholder={this.props.tr.email} />
-                      <FormFeedback>{this.state.emailError}</FormFeedback>
+                      <FormFeedback>{this.validation.emailError}</FormFeedback>
                   </FormGroup>
-                  <FormGroup color={this.state.passwordState}>
-                      <Input state={this.state.passwordState} type="password" name="password" value={this.state.password}
+                  <FormGroup color={this.validation.passwordState}>
+                      <Input state={this.validation.passwordState} type="password" name="password" value={this.model.password}
                       onChange={this.handleChange} placeholder={this.props.tr.password} />
-                      <FormFeedback>{this.state.passwordError}</FormFeedback>
+                      <FormFeedback>{this.validation.passwordError}</FormFeedback>
                   </FormGroup>
                   <Row>
                     <Col xs="12" md="6">
-                      <Button color="success" className="ownButton" title={this.props.tr.submit}>{this.props.tr.submit}</Button>
+                      <Button color="success" className="ownButton" disabled={!this.validation.valid} title={this.props.tr.submit}>{this.props.tr.submit}</Button>
                     </Col>
                     <Col xs="12" md="6">
                       <Link className="ownButton" to={`/${this.props.lang}/register`}>{this.props.tr.register}</Link>
