@@ -25,23 +25,30 @@ export class Register extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-          'name': '',
-          'nameState': '',
-          'nameError': '',
-          'email': '',
-          'emailState': '',
-          'emailError': '',
-          'password': '',
-          'passwordState': '',
-          'passwordError': '',
-          'repassword': '',
-          'repasswordState': '',
-          'repasswordError': ''
-        };
+        this.initModel();
+        this.initValidation();
 
         this.handleChange = this.handleChange.bind(this);
         this.register = this.register.bind(this);
+    }
+
+    initModel() {
+        this.model = {
+          'name': '',
+          'email': '',
+          'password': '',
+          'repassword': ''
+        };
+    }
+
+    initValidation() {
+        this.validation = {
+          'name': {state: '', error: ''},
+          'email': {state: '', error: ''},
+          'password': {state: '', error: ''},
+          'repassword': {state: '', error: ''},
+          'valid': false
+        };
     }
 
     register(event) {
@@ -49,12 +56,7 @@ export class Register extends Component {
       
       store.dispatch(showLoader(true));
       
-      let data = [{
-          "email": this.state.email,
-          "password": this.state.password,
-          "repassword": this.state.repassword
-      }];
-      rxHttp.post(`${hostApi}/register`, data).subscribe(
+      rxHttp.post(`${hostApi}/register`, [this.model]).subscribe(
           (response) => {
               let type = '';
               let text = '';
@@ -69,12 +71,7 @@ export class Register extends Component {
                   type = "success";
                   text = this.props.tr.userRegistered;
 
-                  this.setState({
-                    name: '',
-                    email: '',
-                    password: '',
-                    repassword: ''
-                  });
+                  this.initModel();
                 }
 
                 if (response.info === 0) {
@@ -101,33 +98,37 @@ export class Register extends Component {
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
       
+      this.model[name] = value;
+
       let rules = {
           name: {
-              required: [value],
-              minLength: [3, value]
+              required: [this.model.name],
+              minLength: [3, this.model.name]
           },
           email: {
-              required: [value],
-              emailSimple: [value]
+              required: [this.model.email],
+              emailSimple: [this.model.email]
           },
           password: {
-              required: [value],
-              minLength: [5, value]
+              required: [this.model.password],
+              minLength: [5, this.model.password]
           },
           repassword: {
-              required: [value],
-              minLength: [5, value]
+              required: [this.model.repassword],
+              minLength: [5, this.model.repassword]
           }
       };
       
-      let validator = new Validator(rules[name], this.props.lang);
-      let valMessage = validator.validate();
+      let validator = new Validator(this.props.lang);
+      let valMessage = validator.validate(rules[name]);
 
-      this.setState({
-          [name]: value,
-          [`${name}State`]: valMessage ? 'danger' : 'success',
-          [`${name}Error`]: valMessage ? valMessage : ''
-      });
+      this.validation.valid = validator.formValid(rules);
+      this.validation[name] = {
+          state: valMessage ? 'danger' : 'success',
+          error: valMessage ? valMessage : ''
+        };
+
+      this.forceUpdate();
     }
 
     render() {
@@ -136,29 +137,29 @@ export class Register extends Component {
           <div className="container">    
               <h1>{this.props.tr.register}</h1>
               <form onSubmit={this.register}>
-                  <FormGroup color={this.state.nameState}>
-                      <Input state={this.state.nameState} type="text" name="name" value={this.state.name}
+                  <FormGroup color={this.validation.name.state}>
+                      <Input state={this.validation.name.state} type="text" name="name" value={this.model.name}
                       onChange={this.handleChange} placeholder={this.props.tr.name} />
-                      <FormFeedback>{this.state.nameError}</FormFeedback>
+                      <FormFeedback>{this.validation.name.error}</FormFeedback>
                   </FormGroup>
-                  <FormGroup color={this.state.emailState}>
-                      <Input state={this.state.emailState} type="text" name="email" value={this.state.email}
+                  <FormGroup color={this.validation.email.state}>
+                      <Input state={this.validation.email.state} type="text" name="email" value={this.model.email}
                       onChange={this.handleChange} placeholder={this.props.tr.email} />
-                      <FormFeedback>{this.state.emailError}</FormFeedback>
+                      <FormFeedback>{this.validation.email.error}</FormFeedback>
                   </FormGroup>
-                  <FormGroup color={this.state.passwordState}>
-                      <Input state={this.state.passwordState} type="password" name="password" value={this.state.password}
+                  <FormGroup color={this.validation.password.state}>
+                      <Input state={this.validation.password.state} type="password" name="password" value={this.model.password}
                       onChange={this.handleChange} placeholder={this.props.tr.password} />
-                      <FormFeedback>{this.state.passwordError}</FormFeedback>
+                      <FormFeedback>{this.validation.password.error}</FormFeedback>
                   </FormGroup>
-                  <FormGroup color={this.state.repasswordState}>
-                      <Input state={this.state.repasswordState} type="password" name="repassword" value={this.state.repassword}
+                  <FormGroup color={this.validation.repassword.state}>
+                      <Input state={this.validation.repassword.state} type="password" name="repassword" value={this.model.repassword}
                       onChange={this.handleChange} placeholder={this.props.tr.repassword} />
-                      <FormFeedback>{this.state.repasswordError}</FormFeedback>
+                      <FormFeedback>{this.validation.repassword.error}</FormFeedback>
                   </FormGroup>
                   <Row>
                     <Col md="12">
-                      <Button color="success" className="ownButton" title={this.props.tr.submit}>{this.props.tr.submit}</Button>
+                      <Button color="success" className="ownButton" disabled={!this.validation.valid} title={this.props.tr.submit}>{this.props.tr.submit}</Button>
                     </Col>
                   </Row>
               </form>

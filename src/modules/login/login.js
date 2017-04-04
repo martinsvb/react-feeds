@@ -25,21 +25,26 @@ export class Login extends Component {
     constructor(props) {
         super(props);
 
+        this.initModel();
+        this.initValidation();
+
+        this.handleChange = this.handleChange.bind(this);
+        this.login = this.login.bind(this);
+    }
+
+    initModel() {
         this.model = {
           'email': '',
           'password': ''
         };
+    }
 
+    initValidation() {
         this.validation = {
-          'emailState': '',
-          'emailError': '',
-          'passwordState': '',
-          'passwordError': '',
+          'email': {state: '', error: ''},
+          'password': {state: '', error: ''},
           'valid': false
         };
-
-        this.handleChange = this.handleChange.bind(this);
-        this.login = this.login.bind(this);
     }
 
     login(event) {
@@ -47,8 +52,7 @@ export class Login extends Component {
       
       store.dispatch(showLoader(true));
       
-      let data = [this.model];
-      rxHttp.post(`${hostApi}/login`, data).subscribe(
+      rxHttp.post(`${hostApi}/login`, [this.model]).subscribe(
           (response) => {
               let type = '';
               let text = '';
@@ -107,8 +111,10 @@ export class Login extends Component {
       let valMessage = validator.validate(rules[name]);
 
       this.validation.valid = validator.formValid(rules);
-      this.validation[`${name}State`] = valMessage ? 'danger' : 'success';
-      this.validation[`${name}Error`] = valMessage ? valMessage : '';
+      this.validation[name] = {
+          state: valMessage ? 'danger' : 'success',
+          error: valMessage ? valMessage : ''
+        };
 
       this.forceUpdate();
     }
@@ -119,15 +125,15 @@ export class Login extends Component {
           <div className="container">    
               <h1>{this.props.tr.login}</h1>
               <form onSubmit={this.login}>
-                  <FormGroup color={this.validation.emailState}>
-                      <Input state={this.validation.emailState} type="text" name="email" value={this.model.email}
+                  <FormGroup color={this.validation.email.state}>
+                      <Input state={this.validation.email.state} type="text" name="email" value={this.model.email}
                       onChange={this.handleChange} placeholder={this.props.tr.email} />
-                      <FormFeedback>{this.validation.emailError}</FormFeedback>
+                      <FormFeedback>{this.validation.email.error}</FormFeedback>
                   </FormGroup>
-                  <FormGroup color={this.validation.passwordState}>
-                      <Input state={this.validation.passwordState} type="password" name="password" value={this.model.password}
+                  <FormGroup color={this.validation.password.state}>
+                      <Input state={this.validation.password.state} type="password" name="password" value={this.model.password}
                       onChange={this.handleChange} placeholder={this.props.tr.password} />
-                      <FormFeedback>{this.validation.passwordError}</FormFeedback>
+                      <FormFeedback>{this.validation.password.error}</FormFeedback>
                   </FormGroup>
                   <Row>
                     <Col xs="12" md="6">
