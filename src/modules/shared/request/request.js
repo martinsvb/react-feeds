@@ -39,8 +39,8 @@ export const http = {
                     if (xhr.status >= 200 && xhr.status < 300) {
                         let data = null;
                         if (xhr.response) {
-                            body = JSON.parse(xhr.response);
-                            data = body.data || body || {};
+                            let resBody = JSON.parse(xhr.response);
+                            data = resBody.data || resBody || {};
                         }
                         resolve(data);
                     } else {
@@ -65,6 +65,4 @@ export const rxHttp = {
     put: (url, body, headers) => Observable.fromPromise(http.proccess("PUT", url, headers, body)),
     
     delete: (url, headers) => Observable.fromPromise(http.proccess("DELETE", url, headers))
-}
-
-export const rxRes = (promise) => Observable.fromPromise(promise);
+};

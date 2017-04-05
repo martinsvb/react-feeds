@@ -14,8 +14,16 @@ import store from '../../redux/store';
 
 @connect((store) => {
   return {
-    feeds: store.feedsReducer
+    feeds: store.feedsReducer,
+    lang: store.langReducer,
+    tr: store.transReducer
   };
+}, (dispatch) => {
+  return {
+    showLoader: (val) => {
+      dispatch(showLoader(val));
+    }
+  }
 })
 export default class ShowFeedsComponent extends Component{
 
@@ -24,15 +32,15 @@ export default class ShowFeedsComponent extends Component{
   }
   
   componentDidMount() {
-    store.dispatch(showLoader(true));
+    this.props.showLoader(true);
     rxHttp.get(`${baseURL}`).subscribe(
         (response) => {
-            store.dispatch(showLoader(false));
+            this.props.showLoader(false);
             store.dispatch(getFeeds(response));
         },
         (error) => {
             console.log(error);
-            store.dispatch(showLoader(false));
+            this.props.showLoader(false);
         }
     );
   };
@@ -50,7 +58,7 @@ export default class ShowFeedsComponent extends Component{
                                     <img className="feed-avatar rounded-circle" src={feed.person.avatar} alt="Person avatar" />
                                     <div className="feed-body">
                                         <h4 className="card-title">{feed.person.firstName} {feed.person.lastName}</h4>
-                                        <Link to={`/feed-detail/${feed._id}`} className="btn btn-warning float-right" activeClassName="active-link" title="Add feed">Detail</Link>
+                                        <Link to={`/${this.props.lang}/feed-detail/${feed._id}`} className="btn btn-warning float-right" activeClassName="active-link" title="Add feed">Detail</Link>
                                         <p className="card-text feed-timestamp">{moment(feed.date).format('DD. MM. YYYY, h:mm a')}</p>
                                         <p className="card-text feed-text">{feed.text}</p>
                                     </div>

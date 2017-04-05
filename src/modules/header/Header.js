@@ -82,10 +82,10 @@ class Header extends Component {
                                         {this.user.role == 'guest' &&
                                         <DropdownMenu>
                                             <DropdownItem title={this.tr.login}>
-                                                <Link to={`/${this.lang}/login`}>{this.tr.login}</Link>
+                                                <Link to={`/${this.lang}/user/login`}>{this.tr.login}</Link>
                                             </DropdownItem>
                                             <DropdownItem title={this.tr.register}>
-                                                <Link to={`/${this.lang}/register`}>{this.tr.register}</Link>
+                                                <Link to={`/${this.lang}/user/register`}>{this.tr.register}</Link>
                                             </DropdownItem>
                                         </DropdownMenu>
                                         }
