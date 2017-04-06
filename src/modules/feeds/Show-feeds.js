@@ -15,7 +15,6 @@ import store from '../../redux/store';
 @connect((store) => {
   return {
     feeds: store.feedsReducer,
-    lang: store.langReducer,
     tr: store.transReducer
   };
 }, (dispatch) => {

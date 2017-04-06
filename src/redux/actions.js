@@ -11,5 +11,7 @@ export const ADD_MESSAGE = "ADD_MESSAGE";
 export const DEL_MESSAGE = "DEL_MESSAGE";
 
 // Language
-export const SET_LANG = "SET_LANG";
 export const SET_TRANS = "SET_TRANS";
+
+// User
+export const SET_USER = "SET_USER";

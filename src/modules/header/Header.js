@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
+import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import {
     Row, Col,
@@ -8,19 +10,34 @@ from 'reactstrap';
 
 import {
     Message,
-    setLang, setTrans, getLang, getTranslation
+    setTrans, getLang, getTranslation
 }
 from '../shared/index';
 
-import store from '../../redux/store';
+import { setUser } from '../user/index';
 
+@connect((store) => {
+  return {
+    tr: store.transReducer,
+    user: store.userReducer
+  };
+}, (dispatch) => {
+  return {
+    setTrans: (tr) => {
+        dispatch(setTrans(tr));
+    },
+    setUser: (user) => {
+        dispatch(setUser(user));
+    }
+  }
+})
 class Header extends Component {
     
     constructor(props) {
         super(props);
 
-        this.lang = getLang(this.props.params['lang']);
-        this.transDispatch();
+        this.lang = getLang(this.props.params.lang);
+        this.props.setTrans(getTranslation(this.lang));
 
         this.logout();
 
@@ -39,22 +56,16 @@ class Header extends Component {
 
     translation(lang) {
         this.lang = lang;
-        this.transDispatch();
-    }
-
-    transDispatch() {
-        this.tr = getTranslation(this.lang);
-        store.dispatch(setLang(this.lang));
-        store.dispatch(setTrans(this.tr));
+        this.props.setTrans(getTranslation(this.lang));
+        let location = this.props.location.pathname
+        if (location.length > 1) {
+            location = location.replace(/^\/[a-z]{2}/g, `/${lang}`);
+            browserHistory.push(location);
+        }
     }
 
     logout() {
-        this.user = {
-            name: 'guest',
-            email: 'guest@guest.cz',
-            role: 'guest',
-            modules: {}
-        };
+        this.props.setUser({});
     }
 
     render() {
@@ -65,8 +76,8 @@ class Header extends Component {
                     <Row>
                         <Col md="12">
                             <nav className="app-nav">
-                                <Link to={`/${this.lang}/home`} className="app-nav-link" activeClassName="active-link" title={this.tr.home}>
-                                    <i className="fa fa-home app-nav-link-ico" aria-hidden="true"></i><span className="app-nav-link-text">{this.tr.home}</span>
+                                <Link to={`/${this.lang}/home`} className="app-nav-link" activeClassName="active-link" title={this.props.tr.home}>
+                                    <i className="fa fa-home app-nav-link-ico" aria-hidden="true"></i><span className="app-nav-link-text">{this.props.tr.home}</span>
                                 </Link>
                                 <Link to={`/${this.lang}/show-feeds`} className="app-nav-link" activeClassName="active-link" title="Show feeds">
                                     <i className="fa fa-file-text app-nav-link-ico" aria-hidden="true"></i><span className="app-nav-link-text">Show feeds</span>
@@ -77,25 +88,25 @@ class Header extends Component {
                                 <Dropdown className="user-nav" isOpen={this.state.userDropDown} toggle={() => this.toggle('userDropDown')}>
                                     <DropdownToggle className="noBorder" caret>
                                         <i className="fa fa-user" aria-hidden="true"></i>
-                                        <span className="user-nav-name">&nbsp;{this.user.name}</span>
+                                        <span className="user-nav-name">&nbsp;{this.props.user.name || this.props.tr.guest}</span>
                                     </DropdownToggle>
-                                        {this.user.role == 'guest' &&
+                                        {!this.props.user.name &&
                                         <DropdownMenu>
-                                            <DropdownItem title={this.tr.login}>
-                                                <Link to={`/${this.lang}/user/login`}>{this.tr.login}</Link>
+                                            <DropdownItem title={this.props.tr.login}>
+                                                <Link to={`/${this.lang}/user/login`}>{this.props.tr.login}</Link>
                                             </DropdownItem>
-                                            <DropdownItem title={this.tr.register}>
-                                                <Link to={`/${this.lang}/user/register`}>{this.tr.register}</Link>
+                                            <DropdownItem title={this.props.tr.register}>
+                                                <Link to={`/${this.lang}/user/register`}>{this.props.tr.register}</Link>
                                             </DropdownItem>
                                         </DropdownMenu>
                                         }
-                                        {(this.user.role == 'user' || this.user.role == 'admin') &&
+                                        {this.props.user.name &&
                                         <DropdownMenu>
-                                            <DropdownItem title={this.tr.profile}>
-                                                <Link to={`/${this.lang}/profile`}>{this.tr.profile}</Link>
+                                            <DropdownItem title={this.props.tr.profile}>
+                                                <Link to={`/${this.lang}/profile`}>{this.props.tr.profile}</Link>
                                             </DropdownItem>
-                                            <DropdownItem onClick={() => this.logout()} title={this.tr.logout}>
-                                                {this.tr.logout}
+                                            <DropdownItem onClick={() => this.logout()} title={this.props.tr.logout}>
+                                                {this.props.tr.logout}
                                             </DropdownItem>
                                         </DropdownMenu>
                                         }
@@ -104,21 +115,21 @@ class Header extends Component {
                                 <Dropdown className="lang-nav" isOpen={this.state.langDropDown} toggle={() => this.toggle('langDropDown')}>
                                     <DropdownToggle className="noBorder" caret>
                                         <img src={`/assets/img/flags/${this.lang}.png`} className="img-rounded lang-nav-img" />
-                                        <span className="lang-nav-name">&nbsp;{this.tr[this.lang]}</span>
+                                        <span className="lang-nav-name">&nbsp;{this.props.tr[this.lang]}</span>
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         {this.lang != 'en' &&
-                                        <DropdownItem onClick={() => this.translation('en')} title={this.tr.english}>
+                                        <DropdownItem onClick={() => this.translation('en')} title={this.props.tr.english}>
                                             <img src='/assets/img/flags/en.png' className="img-rounded lang-nav-img" />
                                         </DropdownItem>
                                         }
                                         {this.lang != 'cz' &&
-                                        <DropdownItem onClick={() => this.translation('cz')} title={this.tr.czech}>
+                                        <DropdownItem onClick={() => this.translation('cz')} title={this.props.tr.czech}>
                                             <img src='/assets/img/flags/cz.png' className="img-rounded lang-nav-img" />
                                         </DropdownItem>
                                         }
                                         {this.lang != 'sk' &&
-                                        <DropdownItem onClick={() => this.translation('sk')} title={this.tr.slovak}>
+                                        <DropdownItem onClick={() => this.translation('sk')} title={this.props.tr.slovak}>
                                             <img src='/assets/img/flags/sk.png' className="img-rounded lang-nav-img" />
                                         </DropdownItem>
                                         }

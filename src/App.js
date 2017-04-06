@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Router, Route, hashHistory, IndexRoute } from 'react-router';
+import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 
 import Header from './modules/header/Header';
 import Home from './modules/home/Home';
@@ -14,7 +14,7 @@ class App extends Component {
         return (
             <div>
                 <Loader />
-                <Router history={hashHistory}>
+                <Router history={browserHistory}>
                     <Route path="/" component={Header}>
                         <IndexRoute component={Home} />
                         <Route path="/:lang/home" component={Home} />

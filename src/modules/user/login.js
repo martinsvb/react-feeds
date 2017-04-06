@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Row, Col, Button, FormGroup, Input, FormFeedback } from 'reactstrap';
@@ -8,15 +9,14 @@ import {
     showLoader,
     addMessage,
     Validator,
-    loggerErr
+    loggerErr,
+    responseHandler
 }
 from '../shared/index';
-
-import store from '../../redux/store';
+import { setUser } from './index';
 
 @connect((store) => {
   return {
-    lang: store.langReducer,
     tr: store.transReducer
   };
 }, (dispatch) => {
@@ -24,13 +24,16 @@ import store from '../../redux/store';
     showLoader: (val) => {
       dispatch(showLoader(val));
     },
-    addMessage: (obj) => {
-        dispatch(addMessage(obj));
+    addMessage: (message) => {
+        dispatch(addMessage(message));
+    },
+    setUser: (user) => {
+        dispatch(setUser(user));
     }
   }
 })
 export class Login extends Component {
-  
+
     constructor(props) {
         super(props);
 
@@ -63,18 +66,17 @@ export class Login extends Component {
             
             rxHttp.get(`${hostApi}/user/activation/${this.props.params.activation}`).subscribe(
                 (response) => {
-                    let type = response.info === 1 ? "success" : "danger";
-                    let text = response.info === 1 ? this.props.tr.userActivated : this.props.tr.userNotActivated;
+                    console.log("response", response);
                     this.props.showLoader(false);
-                    this.props.addMessage({type, text});
+                    this.props.addMessage({
+                        type: response.info === 1 ? "success" : "danger",
+                        text: response.info === 1 ? this.props.tr.userTr.userActivated : this.props.tr.userTr.userNotActivated
+                    });
                 },
                 (error) => {
                     loggerErr("Login, login", error);
                     this.props.showLoader(false);
-                    this.props.addMessage({
-                        type: "danger",
-                        text: this.props.tr.userNotLogged
-                    });
+                    this.props.addMessage({type: "danger", text: this.props.tr.userNotLogged});
                 }
             );
         }
@@ -85,39 +87,22 @@ export class Login extends Component {
       
       this.props.showLoader(true);
       
-      rxHttp.post(`${hostApi}/login`, [this.model]).subscribe(
-          (response) => {
-              let type = '';
-              let text = '';
-              this.props.showLoader(false);
-              if (response.hasOwnProperty("loginWarning")) {
-                type = "danger";
-                text = response.loginWarning === "userNotExists"
-                    ? this.props.tr.userNotExists(this.model.email)
-                    : this.props.tr[response.loginWarning];
-              }
-
-              if (response.hasOwnProperty("loginInfo")) {
-                if (response.loginInfo === 1) {
-                  this.user = response;
-                  console.log(this.user);
-                }
-
-                if (response.loginInfo === 0) {
-                      type = "danger";
-                      text = this.props.tr.userNotLogged;
-                }
-              }
-
-              this.props.addMessage({type, text});
+      rxHttp.post(`${hostApi}/login`, this.model).subscribe(
+          (data) => {
+            this.props.showLoader(false);
+            let message = responseHandler(data, this.props.tr.userTr, {0: 'userNotLogged', 1: ''}, {'userNotExists': this.model.email});
+            if (message.text) {
+                this.props.addMessage(message);
+            }
+            if (data.info === 1) {
+                this.props.setUser(data.user);
+                browserHistory.push(`/${this.props.params.lang}/home`);
+            }
           },
           (error) => {
               loggerErr("Login, login", error);
               this.props.showLoader(false);
-              this.props.addMessage({
-                  type: "danger",
-                  text: this.props.tr.userNotLogged
-              });
+              this.props.addMessage({type: "danger", text: this.props.tr.userTr.userNotLogged});
           }
       );
     }
@@ -140,7 +125,7 @@ export class Login extends Component {
           }
       };
 
-      let validator = new Validator(this.props.lang);
+      let validator = new Validator(this.props.params.lang);
       let valMessage = validator.validate(rules[name]);
 
       this.validation.valid = validator.formValid(rules);
@@ -173,7 +158,7 @@ export class Login extends Component {
                       <Button color="success" className="ownButton" disabled={!this.validation.valid} title={this.props.tr.submit}>{this.props.tr.submit}</Button>
                     </Col>
                     <Col xs="12" md="6">
-                      <Link className="ownButton" to={`/${this.props.lang}/register`}>{this.props.tr.register}</Link>
+                      <Link className="ownButton" to={`/${this.props.params.lang}/user/register`}>{this.props.tr.register}</Link>
                     </Col>
                   </Row>
               </form>

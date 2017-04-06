@@ -8,15 +8,13 @@ import {
     showLoader,
     addMessage,
     Validator,
-    loggerErr
+    loggerErr,
+    responseHandler
 }
 from '../shared/index';
 
-import store from '../../redux/store';
-
 @connect((store) => {
   return {
-    lang: store.langReducer,
     tr: store.transReducer
   };
 }, (dispatch) => {
@@ -66,20 +64,23 @@ export class Register extends Component {
       event.preventDefault();
       
       this.props.showLoader(true);
-      rxHttp.post(`${hostApi}/register/lang/${this.props.lang}`, [this.model]).subscribe(
+      rxHttp.post(`${hostApi}/register/lang/${this.props.params.lang}`, [this.model]).subscribe(
           (data) => {
-                <Response data={data} info={{'0': 'userRegistrationError', '1': 'userRegistered'}} />
-                this.initModel();
-                this.initValidation();
-                this.forceUpdate();
+                this.props.showLoader(false);
+                let message = responseHandler(data, this.props.tr.userTr, {0: 'userRegistrationError', 1: 'userRegistered'});
+                if (message.text) {
+                    this.props.addMessage(message);
+                }
+                if (data.info === 1) {
+                    this.initModel();
+                    this.initValidation();
+                    this.forceUpdate();
+                }
           },
           (error) => {
               loggerErr("Register, register", error);
               this.props.showLoader(false);
-              this.props.addMessage({
-                  type: "danger",
-                  text: this.props.tr.userRegistrationError
-              });
+              this.props.addMessage({type: "danger", text: this.props.tr.userTr.userRegistrationError});
           }
       );
     }
@@ -111,7 +112,7 @@ export class Register extends Component {
           }
       };
       
-      let validator = new Validator(this.props.lang);
+      let validator = new Validator(this.props.params.lang);
       let valMessage = validator.validate(rules[name]);
 
       this.validation.valid = validator.formValid(rules);

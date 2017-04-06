@@ -1,11 +1,4 @@
-import { SET_LANG, SET_TRANS } from '../../../redux/actions';
-
-export const setLang = (lang = '') => {
-  return {
-    type: SET_LANG,
-    lang
-  };
-};
+import { SET_TRANS } from '../../../redux/actions';
 
 export const setTrans = (trans = {}) => {
   return {
