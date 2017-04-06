@@ -6,6 +6,7 @@ import { Row, Col, Button, FormGroup, Input, FormFeedback } from 'reactstrap';
 
 import {
     hostApi, hostUpload, rxHttp,
+    cache,
     showLoader,
     addMessage,
     Validator,
@@ -95,6 +96,7 @@ export class Login extends Component {
                 this.props.addMessage(message);
             }
             if (data.info === 1) {
+                cache.set('token', data.token);
                 this.props.setUser(data.user);
                 browserHistory.push(`/${this.props.params.lang}/home`);
             }

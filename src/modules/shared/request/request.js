@@ -1,5 +1,7 @@
 import { Observable } from 'rxjs/Rx';
 
+import { cache } from '../index';
+
 export const baseURL = "https://inloop-webproject.herokuapp.com/api/feeds";
 
 export const http = {
@@ -29,6 +31,11 @@ export const http = {
                 }                
                 if (!headers) {
                     headers = {"content-type": "application/json"};
+                }
+
+                let token = cache.get('token');
+                if (token) {
+                    headers["token"] = token;
                 }
 
                 Object.keys(headers).forEach(key => {

@@ -1,26 +1,19 @@
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+const ls = window.localStorage;
 
-export class cache {
-    
-    constructor() {
-        this.ls = window.localStorage;
-        this.subject = new BehaviorSubject(0);
-        this.dataAdded$ = this.subject.asObservable();
-    }
+export const cache = {
 
-    setItem(key, value) {
-        let data = this.ls.getItem('data');
+    set(key, value) {
+        let data = ls.getItem('data');
         
         data = data ? JSON.parse(data) : {};
         data[key] = value;
 
-        this.ls.setItem('data', JSON.stringify(data));
-        this.subject.next(data);
-    }
+        ls.setItem('data', JSON.stringify(data));
+    },
 
-    getItem(key) {
+    get(key) {
         let result;
-        let data = this.ls.getItem('data');
+        let data = ls.getItem('data');
 
         if (data) {
             data = JSON.parse(data);

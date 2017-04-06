@@ -103,7 +103,7 @@ class Header extends Component {
                                         {this.props.user.name &&
                                         <DropdownMenu>
                                             <DropdownItem title={this.props.tr.profile}>
-                                                <Link to={`/${this.lang}/profile`}>{this.props.tr.profile}</Link>
+                                                <Link to={`/${this.lang}/user/profile`}>{this.props.tr.profile}</Link>
                                             </DropdownItem>
                                             <DropdownItem onClick={() => this.logout()} title={this.props.tr.logout}>
                                                 {this.props.tr.logout}
