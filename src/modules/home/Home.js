@@ -7,8 +7,7 @@ import { getTranslation } from '../shared/index';
 
 @connect((store) => {
   return {
-    tr: store.transReducer,
-    user: store.userReducer
+    tr: store.transReducer
   };
 })
 export default class Home extends Component {

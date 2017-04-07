@@ -43,7 +43,8 @@ export class Register extends Component {
 
     initModel() {
         this.model = {
-          'name': '',
+          'firstName': '',
+          'lastName': '',
           'email': '',
           'password': '',
           'repassword': ''
@@ -52,7 +53,8 @@ export class Register extends Component {
 
     initValidation() {
         this.validation = {
-          'name': {state: '', error: ''},
+          'firstName': {state: '', error: ''},
+          'lastName': {state: '', error: ''},
           'email': {state: '', error: ''},
           'password': {state: '', error: ''},
           'repassword': {state: '', error: ''},
@@ -93,9 +95,13 @@ export class Register extends Component {
       this.model[name] = value;
 
       let rules = {
-          name: {
-              required: [this.model.name],
-              minLength: [3, this.model.name]
+          firstName: {
+              required: [this.model.firstName],
+              minLength: [3, this.model.firstName]
+          },
+          lastName: {
+              required: [this.model.lastName],
+              minLength: [3, this.model.lastName]
           },
           email: {
               required: [this.model.email],
@@ -130,11 +136,22 @@ export class Register extends Component {
           <div className="container">    
               <h1>{this.props.tr.register}</h1>
               <form onSubmit={this.register}>
-                  <FormGroup color={this.validation.name.state}>
-                      <Input state={this.validation.name.state} type="text" name="name" value={this.model.name}
-                      onChange={this.handleChange} placeholder={this.props.tr.name} />
-                      <FormFeedback>{this.validation.name.error}</FormFeedback>
+                  <Row>
+                  <Col xs="12" md="6">
+                  <FormGroup color={this.validation.firstName.state}>
+                      <Input state={this.validation.firstName.state} type="text" name="firstName" value={this.model.firstName}
+                      onChange={this.handleChange} placeholder={this.props.tr.firstName} />
+                      <FormFeedback>{this.validation.firstName.error}</FormFeedback>
                   </FormGroup>
+                  </Col>
+                  <Col xs="12" md="6">
+                  <FormGroup color={this.validation.lastName.state}>
+                      <Input state={this.validation.lastName.state} type="text" name="lastName" value={this.model.lastName}
+                      onChange={this.handleChange} placeholder={this.props.tr.lastName} />
+                      <FormFeedback>{this.validation.lastName.error}</FormFeedback>
+                  </FormGroup>
+                  </Col>
+                  </Row>
                   <FormGroup color={this.validation.email.state}>
                       <Input state={this.validation.email.state} type="text" name="email" value={this.model.email}
                       onChange={this.handleChange} placeholder={this.props.tr.email} />

@@ -17,8 +17,7 @@ import { setUser } from './index';
 
 @connect((store) => {
   return {
-    tr: store.transReducer,
-    user: store.userReducer
+    tr: store.transReducer
   };
 }, (dispatch) => {
   return {
@@ -27,9 +26,6 @@ import { setUser } from './index';
     },
     addMessage: (message) => {
         dispatch(addMessage(message));
-    },
-    setUser: (user) => {
-        dispatch(setUser(user));
     }
   }
 })
@@ -49,7 +45,8 @@ export class Profile extends Component {
 
   initModel() {
       this.model = {
-        'name': this.props.user.name,
+        'firstName': this.props.user.firstName,
+        'lastName': this.props.user.lastName,
         'email': this.props.user.email,
         'role': this.props.user.role,
         'chpassword': false,
@@ -61,7 +58,8 @@ export class Profile extends Component {
 
   initValidation() {
       this.validation = {
-        'name': {state: '', error: ''},
+        'firstName': {state: '', error: ''},
+        'lastName': {state: '', error: ''},
         'email': {state: '', error: ''},
         'role': {state: '', error: ''},
         'password': {state: '', error: ''},
@@ -79,8 +77,13 @@ export class Profile extends Component {
     this.model[name] = value;
 
     let rules = {
-        name: {
-            required: [this.model.name]
+        firstName: {
+            required: [this.model.firstName],
+            minLength: [3, this.model.firstName]
+        },
+        lastName: {
+            required: [this.model.lastName],
+            minLength: [3, this.model.lastName]
         },
         email: {
             required: [this.model.email],
@@ -140,11 +143,22 @@ export class Profile extends Component {
           <div className="container">    
               <h1>{this.props.tr.profile}</h1>
               <form onSubmit={this.changeProfile}>
-                  <FormGroup color={this.validation.name.state}>
-                      <Input state={this.validation.name.state} type="text" name="name" value={this.model.name}
-                      onChange={this.handleChange} placeholder={this.props.tr.name} />
-                      <FormFeedback>{this.validation.name.error}</FormFeedback>
+                  <Row>
+                  <Col xs="12" md="6">
+                  <FormGroup color={this.validation.firstName.state}>
+                      <Input state={this.validation.firstName.state} type="text" name="firstName" value={this.model.firstName}
+                      onChange={this.handleChange} placeholder={this.props.tr.firstName} />
+                      <FormFeedback>{this.validation.firstName.error}</FormFeedback>
                   </FormGroup>
+                  </Col>
+                  <Col xs="12" md="6">
+                  <FormGroup color={this.validation.lastName.state}>
+                      <Input state={this.validation.lastName.state} type="text" name="lastName" value={this.model.lastName}
+                      onChange={this.handleChange} placeholder={this.props.tr.lastName} />
+                      <FormFeedback>{this.validation.lastName.error}</FormFeedback>
+                  </FormGroup>
+                  </Col>
+                  </Row>
                   <FormGroup color={this.validation.email.state}>
                       <Input state={this.validation.email.state} type="text" name="email" value={this.model.email}
                       onChange={this.handleChange} placeholder={this.props.tr.email} />

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
+import { hashHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import {
@@ -9,8 +9,13 @@ import {
 from 'reactstrap';
 
 import {
+    cache,
+    hostApi, hostUpload, rxHttp,
     Message,
-    setTrans, getLang, getTranslation
+    setTrans, getLang, getTranslation,
+    showLoader,
+    addMessage,
+    loggerErr
 }
 from '../shared/index';
 
@@ -26,6 +31,12 @@ import { setUser } from '../user/index';
     setTrans: (tr) => {
         dispatch(setTrans(tr));
     },
+    showLoader: (val) => {
+      dispatch(showLoader(val));
+    },
+    addMessage: (message) => {
+        dispatch(addMessage(message));
+    },
     setUser: (user) => {
         dispatch(setUser(user));
     }
@@ -39,7 +50,7 @@ class Header extends Component {
         this.lang = getLang(this.props.params.lang);
         this.props.setTrans(getTranslation(this.lang));
 
-        this.logout();
+        this.props.setUser(cache.get('user') || {});
 
         this.toggle = this.toggle.bind(this);
         this.state = {
@@ -60,12 +71,44 @@ class Header extends Component {
         let location = this.props.location.pathname
         if (location.length > 1) {
             location = location.replace(/^\/[a-z]{2}/g, `/${lang}`);
-            browserHistory.push(location);
+            hashHistory.push(location);
         }
     }
 
     logout() {
+
+        let token = cache.get('token');
+
+        if (token) {
+            this.props.showLoader(true);
+
+            rxHttp.get(`${hostApi}/logout/token/${token}`).subscribe(
+                (response) => {
+                    this.props.showLoader(false);
+                    this.props.addMessage({
+                        type: response.info === 1 ? "success" : "danger",
+                        text: response.info === 1 ? this.props.tr.userTr.userLoggedOut : this.props.tr.userTr.userNotLoggedOut
+                    });
+                    if (response.info === 1) {
+                        this.redirectLogout(`/${this.lang}/home`);
+                    }
+                },
+                (error) => {
+                    loggerErr("Logout, logout", error);
+                    this.props.showLoader(false);
+                    this.props.addMessage({type: "danger", text: this.props.tr.userNotLoggedOut});
+                }
+            );
+        }
+
+        this.redirectLogout(`/${this.lang}/home`);
+    }
+
+    redirectLogout(location, user) {
+        cache.set('token', null);
+        cache.set('user', {});
         this.props.setUser({});
+        hashHistory.push(location);
     }
 
     render() {
@@ -88,9 +131,9 @@ class Header extends Component {
                                 <Dropdown className="user-nav" isOpen={this.state.userDropDown} toggle={() => this.toggle('userDropDown')}>
                                     <DropdownToggle className="noBorder" caret>
                                         <i className="fa fa-user" aria-hidden="true"></i>
-                                        <span className="user-nav-name">&nbsp;{this.props.user.name || this.props.tr.guest}</span>
+                                        <span className="user-nav-name">&nbsp;{this.props.user.firstName || this.props.tr.guest}</span>
                                     </DropdownToggle>
-                                        {!this.props.user.name &&
+                                        {!this.props.user.firstName &&
                                         <DropdownMenu>
                                             <DropdownItem title={this.props.tr.login}>
                                                 <Link to={`/${this.lang}/user/login`}>{this.props.tr.login}</Link>
@@ -100,7 +143,7 @@ class Header extends Component {
                                             </DropdownItem>
                                         </DropdownMenu>
                                         }
-                                        {this.props.user.name &&
+                                        {this.props.user.firstName &&
                                         <DropdownMenu>
                                             <DropdownItem title={this.props.tr.profile}>
                                                 <Link to={`/${this.lang}/user/profile`}>{this.props.tr.profile}</Link>

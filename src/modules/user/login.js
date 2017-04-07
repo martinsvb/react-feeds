@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
+import { hashHistory } from 'react-router';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Row, Col, Button, FormGroup, Input, FormFeedback } from 'reactstrap';
@@ -64,10 +64,9 @@ export class Login extends Component {
 
         if (this.props.params.activation) {
             this.props.showLoader(true);
-            
-            rxHttp.get(`${hostApi}/user/activation/${this.props.params.activation}`).subscribe(
+
+            rxHttp.get(`${hostApi}/activation/code/${this.props.params.activation}`).subscribe(
                 (response) => {
-                    console.log("response", response);
                     this.props.showLoader(false);
                     this.props.addMessage({
                         type: response.info === 1 ? "success" : "danger",
@@ -97,8 +96,9 @@ export class Login extends Component {
             }
             if (data.info === 1) {
                 cache.set('token', data.token);
+                cache.set('user', data.user);
                 this.props.setUser(data.user);
-                browserHistory.push(`/${this.props.params.lang}/home`);
+                hashHistory.push(`/${this.props.params.lang}/home`);
             }
           },
           (error) => {
