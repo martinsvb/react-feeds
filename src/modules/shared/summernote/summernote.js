@@ -42,11 +42,16 @@ export class Summernote extends Component {
                 };
                 config.callbacks.onMediaDelete = (target) => {
                     let fileUrl = target[0].attributes.filter((attr) => attr.name == "src");
-                    this.mediaDelete(fileUrl.value).subscribe(
-                        (response) => response,
-                        (error) => { loggerErr("Summernote, mediaDelete", error) }
-                    );
-                };
+                    let data = JSON.stringify({
+                        action: "del",
+                        file: fileUrl
+                    });
+                    
+                    rxHttp.post(this.props.upload.host, data).subscribe(
+                            (response) => response,
+                            (error) => { loggerErr("Summernote, mediaDelete", error) }
+                        );
+                    };
             }
 
             this.initialized = true;
@@ -89,15 +94,6 @@ export class Summernote extends Component {
                 error: (error) => { loggerErr("Summernote, imageUpload", error) }
             });
         }
-    }
-
-    mediaDelete(fileUrl) {
-        let data = JSON.stringify({
-            action: "del",
-            file: fileUrl
-        });
-        
-        return rxHttp.post(this.props.upload.host, data);
     }
 }
 

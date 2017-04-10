@@ -7,4 +7,5 @@ export * from './request/index';
 export * from './settings/index';
 export * from './summernote/index';
 export * from './translation/index';
+export * from './uploader/uploader';
 export * from './validator/index';

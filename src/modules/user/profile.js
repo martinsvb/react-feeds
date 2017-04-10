@@ -9,7 +9,8 @@ import {
     addMessage,
     Validator,
     loggerErr,
-    responseHandler
+    responseHandler,
+    Uploader
 }
 from '../shared/index';
 
@@ -17,7 +18,8 @@ import { setUser } from './index';
 
 @connect((store) => {
   return {
-    tr: store.transReducer
+    tr: store.transReducer,
+    user: store.userReducer
   };
 }, (dispatch) => {
   return {
@@ -26,6 +28,9 @@ import { setUser } from './index';
     },
     addMessage: (message) => {
         dispatch(addMessage(message));
+    },
+    setUser: (user) => {
+        dispatch(setUser(user));
     }
   }
 })
@@ -34,10 +39,15 @@ export class Profile extends Component {
   constructor(props) {
     super(props);
 
+    this.props.setUser(cache.get('user') || {});
+
     this.initModel();
     this.initValidation();
 
+    this.uploadFolder = 'avatars';
+
     this.handleChange = this.handleChange.bind(this);
+    this.handleUploadChange = this.handleUploadChange.bind(this);
     this.changeProfile = this.changeProfile.bind(this);
     this.initModel = this.initModel.bind(this);
     this.initValidation = this.initValidation.bind(this);
@@ -47,9 +57,11 @@ export class Profile extends Component {
       this.model = {
         'firstName': this.props.user.firstName,
         'lastName': this.props.user.lastName,
+        'avatar': this.props.user.avatar,
         'email': this.props.user.email,
         'role': this.props.user.role,
         'chpassword': false,
+        'delete': false,
         'password': '',
         'newpassword': '',
         'newrepassword': '',
@@ -65,7 +77,7 @@ export class Profile extends Component {
         'password': {state: '', error: ''},
         'newpassword': {state: '', error: ''},
         'newrepassword': {state: '', error: ''},
-        'valid': false
+        'valid': true
       };
   }
 
@@ -107,13 +119,30 @@ export class Profile extends Component {
     let validator = new Validator(this.props.params.lang);
     let valMessage = validator.validate(rules[name]);
 
-    this.validation.valid = validator.formValid(rules);
+    if (this.model.chpassword) {
+        this.validation.valid = validator.formValid(rules);
+    }
+    if (this.model.delete) {
+        this.validation.valid = validator.formValid({
+            firstName: rules.firstName,
+            lastName: rules.lastName,
+            email: rules.email,
+            password: rules.password,
+        });
+    }
+    if (!this.model.chpassword && !this.model.delete) {
+        this.validation.valid = true;
+    }
     this.validation[name] = {
         state: valMessage ? 'danger' : 'success',
         error: valMessage ? valMessage : ''
       };
 
     this.forceUpdate();
+  }
+
+  handleUploadChange(event) {
+      console.log("upload", event);
   }
 
   changeProfile(event) {
@@ -143,6 +172,18 @@ export class Profile extends Component {
           <div className="container">    
               <h1>{this.props.tr.profile}</h1>
               <form onSubmit={this.changeProfile}>
+                    <Row>
+                    <Col md="12">
+                    <Uploader uploadValue={this.model.avatar}
+                        type="image"
+                        single
+                        upload={{host: hostUpload, folder: this.uploadFolder}}
+                        uploadLabel={`${this.props.tr.upload} ${this.props.tr.image}`}
+                        delLabel={`${this.props.tr.delete} ${this.props.tr.image}`}
+                        uploadChange={() => this.handleUploadChange}
+                    />
+                    </Col>
+                    </Row>
                   <Row>
                   <Col xs="12" md="6">
                   <FormGroup color={this.validation.firstName.state}>
@@ -161,7 +202,7 @@ export class Profile extends Component {
                   </Row>
                   <FormGroup color={this.validation.email.state}>
                       <Input state={this.validation.email.state} type="text" name="email" value={this.model.email}
-                      onChange={this.handleChange} placeholder={this.props.tr.email} />
+                      onChange={this.handleChange} placeholder={this.props.tr.email} disabled />
                       <FormFeedback>{this.validation.email.error}</FormFeedback>
                   </FormGroup>
                   <FormGroup color={this.validation.role.state}>
@@ -169,14 +210,26 @@ export class Profile extends Component {
                       onChange={this.handleChange} placeholder={this.props.tr.role} disabled />
                       <FormFeedback>{this.validation.role.error}</FormFeedback>
                   </FormGroup>
+                  <Row>
+                  <Col xs="12" md="6">
                     <FormGroup check>
                         <Label check>
-                            <Input type="checkbox" name="chpassword" value={this.model.chpassword} onChange={this.handleChange} />{' '}
+                            <Input type="checkbox" name="chpassword" value={this.model.chpassword} onChange={this.handleChange} disabled={this.model.delete} />{' '}
                             {this.props.tr.changePassword}
                         </Label>
                     </FormGroup>
+                  </Col>
+                  <Col xs="12" md="6">
+                    <FormGroup check>
+                        <Label check>
+                            <Input type="checkbox" name="delete" value={this.model.delete} onChange={this.handleChange} disabled={this.model.chpassword} />{' '}
+                            {this.props.tr.delete}
+                        </Label>
+                    </FormGroup>
+                  </Col>
+                  </Row>
 
-                  {this.model.chpassword &&
+                  {(this.model.chpassword || this.model.delete) &&
                   <div>
                   <hr />
                   <FormGroup color={this.validation.password.state}>
@@ -184,6 +237,10 @@ export class Profile extends Component {
                       onChange={this.handleChange} placeholder={this.props.tr.password} />
                       <FormFeedback>{this.validation.password.error}</FormFeedback>
                   </FormGroup>
+                  </div>
+                  }
+                  {this.model.chpassword &&
+                    <div>
                   <FormGroup color={this.validation.newpassword.state}>
                       <Input state={this.validation.newpassword.state} type="password" name="newpassword" value={this.model.newpassword}
                       onChange={this.handleChange} placeholder={this.props.tr.newPassword} />
