@@ -77,38 +77,27 @@ class Header extends Component {
 
     logout() {
 
-        let token = cache.get('token');
-
-        if (token) {
-            this.props.showLoader(true);
-
-            rxHttp.get(`${hostApi}/logout/token/${token}`).subscribe(
-                (response) => {
-                    this.props.showLoader(false);
-                    this.props.addMessage({
-                        type: response.info === 1 ? "success" : "danger",
-                        text: response.info === 1 ? this.props.tr.userTr.userLoggedOut : this.props.tr.userTr.userNotLoggedOut
-                    });
-                    if (response.info === 1) {
-                        this.redirectLogout(`/${this.lang}/home`);
-                    }
-                },
-                (error) => {
-                    loggerErr("Logout, logout", error);
-                    this.props.showLoader(false);
-                    this.props.addMessage({type: "danger", text: this.props.tr.userNotLoggedOut});
+        this.props.showLoader(true);
+        
+        rxHttp.get(`${hostApi}/logout`).subscribe(
+            (response) => {
+                this.props.showLoader(false);
+                this.props.addMessage({
+                    type: response.info === 1 ? "success" : "danger",
+                    text: response.info === 1 ? this.props.tr.userTr.userLoggedOut : this.props.tr.userTr.userNotLoggedOut
+                });
+                if (response.info === 1) {
+                    cache.set('user', {});
+                    this.props.setUser({});
+                    hashHistory.push(location);
                 }
-            );
-        }
-
-        this.redirectLogout(`/${this.lang}/home`);
-    }
-
-    redirectLogout(location, user) {
-        cache.set('token', null);
-        cache.set('user', {});
-        this.props.setUser({});
-        hashHistory.push(location);
+            },
+            (error) => {
+                loggerErr("Logout, logout", error);
+                this.props.showLoader(false);
+                this.props.addMessage({type: "danger", text: this.props.tr.userNotLoggedOut});
+            }
+        );
     }
 
     render() {

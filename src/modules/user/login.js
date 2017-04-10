@@ -95,7 +95,6 @@ export class Login extends Component {
                 this.props.addMessage(message);
             }
             if (data.info === 1) {
-                cache.set('token', data.token);
                 cache.set('user', data.user);
                 this.props.setUser(data.user);
                 hashHistory.push(`/${this.props.params.lang}/home`);

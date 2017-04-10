@@ -33,9 +33,9 @@ export const http = {
                     headers = {"content-type": "application/json"};
                 }
 
-                let token = cache.get('token');
-                if (token) {
-                    headers["token"] = token;
+                let user = cache.get('user');
+                if (user && user.email) {
+                    headers["email"] = user.email;
                 }
 
                 Object.keys(headers).forEach(key => {

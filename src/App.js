@@ -9,8 +9,10 @@ import { Login, Profile, Register } from './modules/user/index';
 
 import { Loader } from './modules/shared/index';
 
-class App extends Component {
+export default class App extends Component {
+    
     render () {
+        
         return (
             <div>
                 <Loader />
@@ -30,5 +32,3 @@ class App extends Component {
         );
     }
 };
-
-export default App;
