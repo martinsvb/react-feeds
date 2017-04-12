@@ -41,11 +41,8 @@ export class Summernote extends Component {
                     this.imageUpload({files, editable: this.editable});
                 };
                 config.callbacks.onMediaDelete = (target) => {
-                    let fileUrl = target[0].attributes.filter((attr) => attr.name == "src");
-                    let data = JSON.stringify({
-                        action: "del",
-                        file: fileUrl
-                    });
+                    let file = target[0].attributes.filter((attr) => attr.name == "src");
+                    let data = {action: "del", file};
                     
                     rxHttp.post(this.props.upload.host, data).subscribe(
                             (response) => response,
@@ -75,24 +72,20 @@ export class Summernote extends Component {
 
     imageUpload(dataUpload) {
         if (dataUpload.editable) {
-            let data = new FormData();
-            data.append("file", dataUpload.files[0]);
-            data.append("action", "upload");
-            data.append("image", "resizeNoThumb");
-            data.append("folder", this.props.upload.folder);
-            $.post({
-                data: data,
-                type: "POST",
-                url: this.props.upload.host,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: (uploadedImg) => {
-                    let insertImg = $('<img style="width: 100%;" src="' + uploadedImg.data[0].fileName + '" />');
+            let data = {
+                file: dataUpload.files[0],
+                action: 'upload',
+                image: 'resizeNoThumb',
+                folder: this.props.upload.folder
+            };
+
+            rxHttp.uploadFile(this.props.upload.host, data).subscribe(
+                (response) => {
+                    let insertImg = $('<img style="width: 100%;" src="' + response.data[0].fileName + '" />');
                     $('.'+this.state.id).summernote('insertNode', insertImg[0]);
                 },
-                error: (error) => { loggerErr("Summernote, imageUpload", error) }
-            });
+                (error) => { loggerErr("Summernote, imageUpload", error) }
+            );
         }
     }
 }

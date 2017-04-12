@@ -144,6 +144,14 @@ export const translation = {
     "roleChanged": "Role data was successfully changed.",
     "roleNotChanged": "Changing role data wasn't successfull, please try it again.",
     "nousers": "There isn't any user store in the system.",
+    "uploader": {
+      "uploadPic": "Upload picture",
+      "uploadFile": "Upload file",
+      "uploading": "Uploading...",
+      "deletePic": "Delete picture",
+      "deleteFile": "Delete file",
+      "deleting": "Deleting...",
+    },
     "regex": regex
   },
   "cz": {
@@ -269,6 +277,14 @@ export const translation = {
     "roleChanged": "Data role byla úspěšně změněna.",
     "roleNotChanged": "Změna dat role se nezdařila, prosím zkuste to znovu.",
     "nousers": "V systému není uložena žádný uživatel.",
+    "uploader": {
+      "uploadPic": "Nahrát obrázek",
+      "uploadFile": "Nahrát soubor",
+      "uploading": "Nahrávám...",
+      "deletePic": "Smazat obrázek",
+      "deleteFile": "Smazat soubor",
+      "deleting": "Mažu..."
+    },
     "regex": regex
   },
   "sk": {
@@ -394,6 +410,14 @@ export const translation = {
     "roleChanged": "Dáta role bola úspešne zmenená.",
     "roleNotChanged": "Zmena dát role zlyhala, prosím skúste to znova.",
     "nousers": "V systéme nie je uložený žiadny užívateľ.",
+    "uploader": {
+      "UploadPic": "Nahrať obrázok",
+      "UploadFile": "Nahrať súbor",
+      "Uploading": "Nahrávam ...",
+      "DeletePic": "Zmazať obrázok",
+      "DeleteFile": "Zmazať súbor",
+      "Deleting": "Mažem ..."
+    },
     "regex": regex
   }
 };

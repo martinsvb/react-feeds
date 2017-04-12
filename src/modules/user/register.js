@@ -9,7 +9,8 @@ import {
     addMessage,
     Validator,
     loggerErr,
-    responseHandler
+    responseHandler,
+    Uploader
 }
 from '../shared/index';
 
@@ -35,7 +36,10 @@ export class Register extends Component {
         this.initModel();
         this.initValidation();
 
+        this.uploadFolder = 'avatars';
+
         this.handleChange = this.handleChange.bind(this);
+        this.handleUploadChange = this.handleUploadChange.bind(this);
         this.register = this.register.bind(this);
         this.initModel = this.initModel.bind(this);
         this.initValidation = this.initValidation.bind(this);
@@ -45,6 +49,7 @@ export class Register extends Component {
         this.model = {
           'firstName': '',
           'lastName': '',
+          'avatar': '',
           'email': '',
           'password': '',
           'repassword': ''
@@ -130,12 +135,23 @@ export class Register extends Component {
       this.forceUpdate();
     }
 
+    handleUploadChange(uploaded) {
+        this.model.avatar = uploaded ? uploaded[0] : {};
+    }
+
     render() {
 
         return (
           <div className="container">    
               <h1>{this.props.tr.register}</h1>
               <form onSubmit={this.register}>
+                    <Uploader file={this.model.avatar}
+                        type="image"
+                        single
+                        upload={{host: hostUpload, folder: this.uploadFolder}}
+                        tr={{label: this.props.tr.uploader.uploadPic, uploader: this.props.tr.uploader}}
+                        uploadChange={this.handleUploadChange}
+                    />
                   <Row>
                   <Col xs="12" md="6">
                   <FormGroup color={this.validation.firstName.state}>

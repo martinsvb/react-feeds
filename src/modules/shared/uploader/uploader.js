@@ -13,6 +13,8 @@ export class Uploader extends Component {
         this.files = [];
         if (this.props.file) this.files.push[this.props.file];
         if (this.props.files) this.files = this.props.files;
+        
+        this.uploading = false;
 
         this.showUploader = true;
 
@@ -33,6 +35,9 @@ export class Uploader extends Component {
 
         if (goUpload) {
 
+            this.uploading = true;
+            this.forceUpdate();
+
             let data = {
                 file: sourceFile,
                 action: 'upload',
@@ -49,11 +54,10 @@ export class Uploader extends Component {
                     }
                     this.files.push(response[0]);
                     this.props.uploadChange(this.files);
+                    this.uploading = false;
                     this.forceUpdate();
                 },
-                (error) => {
-                    loggerErr("Uploader, uploadFile", error);
-                }
+                (error) => { loggerErr("Uploader, uploadFile", error); }
             );
         }
         else {
@@ -77,9 +81,7 @@ export class Uploader extends Component {
                     }
                 }    
             },
-            (error) => {
-                loggerErr("Summernote, mediaDelete", error);
-            }
+            (error) => { loggerErr("Uploader, deletedFile", error); }
         );
     }
 
@@ -101,7 +103,7 @@ export class Uploader extends Component {
             {this.showUploader &&
                 <label className="uploader">
                     <input type="file" className="fileUpl" onChange={this.uploadFile} />
-                    <span><i className="fa fa-upload" aria-hidden="true"></i> {this.props.uploadLabel}</span>
+                    <span><i className="fa fa-upload" aria-hidden="true"></i> {this.uploading ? this.props.tr.uploader.uploading : this.props.tr.label}</span>
                 </label>
             }
             {this.files && this.files.length > 0 &&
@@ -113,13 +115,13 @@ export class Uploader extends Component {
                                 <a href={file.fileName} target="_blank" className="sameHeight fileLink">
                                 <i className="fa fa-file" aria-hidden="true"></i> {file.name}
                                 </a>
-                                <span className="fileDel" title={this.props.delLabel} id={i} onClick={(file) => this.deleteFile(file)}>x</span>
+                                <span className="fileDel" title={this.props.tr.uploader.deleteFile} onClick={() => this.deleteFile(file)}>x</span>
                             </div>
                         }
                         {this.props.type === 'image' &&
                             <div>
                                 <img src={file.thumbName} alt={file.thumbName} className="img-fluid img-rounded sameHeight" />
-                                <span className="fileDel" title={this.props.delLabel} onClick={() => this.deleteFile(file)}>x</span>
+                                <span className="fileDel" title={this.props.tr.uploader.deletePic} onClick={() => this.deleteFile(file)}>x</span>
                             </div>
                         }
                         </Col>
@@ -133,10 +135,11 @@ export class Uploader extends Component {
 
 Uploader.propTypes = {
     uploadLabel: PropTypes.string,
-    delLabel: PropTypes.string,
+    tr: PropTypes.object,                       // {label, uploader}
     type: PropTypes.string,
     single: PropTypes.bool,
     required: PropTypes.bool,
+    file: PropTypes.object,
     files: PropTypes.array,
     uploadChange: PropTypes.func, 
     upload: PropTypes.object                    // {host, folder}

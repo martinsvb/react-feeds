@@ -142,7 +142,7 @@ export class Profile extends Component {
   }
 
   handleUploadChange(uploaded) {
-      this.model.avatar = uploaded;
+      this.model.avatar = uploaded ? uploaded[0] : {};
   }
 
   changeProfile(event) {
@@ -150,7 +150,7 @@ export class Profile extends Component {
       
       this.props.showLoader(true);
       
-      rxHttp.post(`${hostApi}/user`, [this.model]).subscribe(
+      rxHttp.put(`${hostApi}/user`, [this.model]).subscribe(
           (data) => {
             this.props.showLoader(false);
             let message = responseHandler(data, this.props.tr.userTr, {0: 'profileNotChanged', 1: 'profileChanged'});
@@ -159,7 +159,7 @@ export class Profile extends Component {
             }
           },
           (error) => {
-              loggerErr("Login, login", error);
+              loggerErr("Profile, changeProfile", error);
               this.props.showLoader(false);
               this.props.addMessage({type: "danger", text: this.props.tr.userTr.userNotLogged});
           }
@@ -172,13 +172,12 @@ export class Profile extends Component {
           <div className="container">    
               <h1>{this.props.tr.profile}</h1>
               <form onSubmit={this.changeProfile}>
-                    <Uploader files={this.model.avatar}
+                    <Uploader file={this.model.avatar}
                         type="image"
                         single
                         upload={{host: hostUpload, folder: this.uploadFolder}}
-                        uploadLabel={`${this.props.tr.upload} ${this.props.tr.image}`}
-                        delLabel={`${this.props.tr.delete} ${this.props.tr.image}`}
-                        uploadChange={this.handleUploadChange}
+                        tr={{label: this.props.tr.uploader.uploadPic, uploader: this.props.tr.uploader}}
+                        uploadChange={() => this.handleUploadChange}
                     />
                   <Row>
                   <Col xs="12" md="6">
