@@ -17594,6 +17594,19 @@ button,
 .margin-bottom-lg {
   margin-bottom: .8rem; }
 
+.img-fluid,
+.carousel-inner > .carousel-item > img,
+.carousel-inner > .carousel-item > a > img {
+  display: block;
+  max-width: 100%;
+  height: auto; }
+
+.img-rounded {
+  border-radius: .2rem; }
+
+label {
+  color: #636c72; }
+
 .required {
   float: left; }
   .required-success {
@@ -17602,10 +17615,9 @@ button,
     color: #d9534f; }
 
 .ownButton {
-  width: 100%;
-  border-radius: 2rem;
+  border-radius: .3rem;
   text-transform: uppercase;
-  margin-bottom: 1rem; }
+  margin: 1rem 0; }
 
 header {
   width: 100%;
@@ -17732,3 +17744,87 @@ header {
 .note-link-popover,
 .note-image-popover {
   display: none !important; }
+
+label.uploader input[type="file"] {
+  position: fixed;
+  top: -1000px; }
+
+.uploader,
+.fileLink {
+  font-size: 1rem;
+  padding: 0.375rem 0.75rem; }
+
+.uploader {
+  display: block;
+  border: 1px solid #AAA;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  width: 150px;
+  text-align: center;
+  color: #55595c; }
+
+.uploader:hover,
+.uploader:active {
+  background: #CCC; }
+
+.uploader:invalid + span {
+  color: #A44; }
+
+.uploader:valid + span {
+  color: #4A4; }
+
+.filesContainer {
+  min-height: 45px;
+  /* minimum height of cover stripe */ }
+
+.imgContainer {
+  min-height: 100px;
+  /* minimum height of cover stripe */ }
+
+.fileWrap,
+.fileLinkWrap {
+  position: relative;
+  overflow: hidden;
+  margin: 0 !important; }
+
+.fileLinkWrap {
+  float: left;
+  display: block; }
+
+.fileDel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 200;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 18px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #fff;
+  border-radius: 50%;
+  background: rgba(62, 42, 22, 0.5);
+  cursor: pointer; }
+
+.fileDel:hover {
+  background: rgba(62, 42, 22, 0.8); }
+
+.fileLink,
+.sameHeight {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 100; }
+
+.sameHeight {
+  width: auto;
+  /* maintain width/height aspect ratio */
+  height: 95px;
+  margin-bottom: 5px; }
+
+.fileLink {
+  height: 40px;
+  text-align: left;
+  margin: 0 0 5px .375rem;
+  overflow: hidden; }

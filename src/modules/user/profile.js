@@ -141,8 +141,8 @@ export class Profile extends Component {
     this.forceUpdate();
   }
 
-  handleUploadChange(event) {
-      console.log("upload", event);
+  handleUploadChange(uploaded) {
+      this.model.avatar = uploaded;
   }
 
   changeProfile(event) {
@@ -172,44 +172,50 @@ export class Profile extends Component {
           <div className="container">    
               <h1>{this.props.tr.profile}</h1>
               <form onSubmit={this.changeProfile}>
-                    <Row>
-                    <Col md="12">
-                    <Uploader uploadValue={this.model.avatar}
+                    <Uploader files={this.model.avatar}
                         type="image"
                         single
                         upload={{host: hostUpload, folder: this.uploadFolder}}
                         uploadLabel={`${this.props.tr.upload} ${this.props.tr.image}`}
                         delLabel={`${this.props.tr.delete} ${this.props.tr.image}`}
-                        uploadChange={() => this.handleUploadChange}
+                        uploadChange={this.handleUploadChange}
                     />
-                    </Col>
-                    </Row>
                   <Row>
                   <Col xs="12" md="6">
                   <FormGroup color={this.validation.firstName.state}>
-                      <Input state={this.validation.firstName.state} type="text" name="firstName" value={this.model.firstName}
+                      <Label for="firstName">{this.props.tr.firstName}</Label>
+                      <Input state={this.validation.firstName.state} type="text" id="firstName" name="firstName" value={this.model.firstName}
                       onChange={this.handleChange} placeholder={this.props.tr.firstName} />
                       <FormFeedback>{this.validation.firstName.error}</FormFeedback>
                   </FormGroup>
                   </Col>
                   <Col xs="12" md="6">
                   <FormGroup color={this.validation.lastName.state}>
-                      <Input state={this.validation.lastName.state} type="text" name="lastName" value={this.model.lastName}
+                      <Label for="lastName">{this.props.tr.lastName}</Label>
+                      <Input state={this.validation.lastName.state} type="text" id="lastName" name="lastName" value={this.model.lastName}
                       onChange={this.handleChange} placeholder={this.props.tr.lastName} />
                       <FormFeedback>{this.validation.lastName.error}</FormFeedback>
                   </FormGroup>
                   </Col>
                   </Row>
+                  <Row>
+                  <Col xs="12" md="6">
                   <FormGroup color={this.validation.email.state}>
-                      <Input state={this.validation.email.state} type="text" name="email" value={this.model.email}
+                    <Label for="email">{this.props.tr.email}</Label>
+                      <Input state={this.validation.email.state} type="text" id="email" name="email" value={this.model.email}
                       onChange={this.handleChange} placeholder={this.props.tr.email} disabled />
                       <FormFeedback>{this.validation.email.error}</FormFeedback>
                   </FormGroup>
+                  </Col>
+                  <Col xs="12" md="6">
                   <FormGroup color={this.validation.role.state}>
-                      <Input state={this.validation.role.state} type="text" name="email" value={this.model.role}
+                    <Label for="role">{this.props.tr.role}</Label>
+                      <Input state={this.validation.role.state} type="text" id="role" name="role" value={this.model.role}
                       onChange={this.handleChange} placeholder={this.props.tr.role} disabled />
                       <FormFeedback>{this.validation.role.error}</FormFeedback>
                   </FormGroup>
+                  </Col>
+                  </Row>
                   <Row>
                   <Col xs="12" md="6">
                     <FormGroup check>
@@ -255,7 +261,7 @@ export class Profile extends Component {
                   }
                   
                   <Row>
-                    <Col xs="12" md="6">
+                    <Col md="12">
                       <Button color="success" className="ownButton" disabled={!this.validation.valid} title={this.props.tr.submit}>{this.props.tr.submit}</Button>
                     </Col>
                   </Row>

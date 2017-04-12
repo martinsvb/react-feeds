@@ -3,19 +3,17 @@ import { Row, Col } from 'reactstrap';
 
 import classNames from 'classnames';
 
-import { rxHttp, showLoader, addMessage, loggerErr } from '../index';
-
-import store from '../../../redux/store';
+import { rxHttp, loggerErr } from '../index';
 
 export class Uploader extends Component {
 
     constructor(props) {
         super(props);
 
-        this.files = typeof this.props.value === 'string'
-            ? [this.props.value]
-            : this.props.value;
- 
+        this.files = [];
+        if (this.props.file) this.files.push[this.props.file];
+        if (this.props.files) this.files = this.props.files;
+
         this.showUploader = true;
 
         this.uploadFile = this.uploadFile.bind(this);
@@ -28,122 +26,105 @@ export class Uploader extends Component {
         let goUpload = true;
 
         for (let file of this.files) {
-            if (this.file.fileName.indexOf(sourceFile.name) > 0) {
+            if (file.fileName.indexOf(sourceFile.name) > 0) {
                 goUpload = false;
             }
         }
 
         if (goUpload) {
 
-            store.dispatch(showLoader(true));
-
-            let data = new FormData();
-            data.append("file", sourceFile);
-            data.append("action", "upload");
-            if (this.props.type == "image") {
-                data.append("image", "resize");
+            let data = {
+                file: sourceFile,
+                action: 'upload',
+                folder: this.props.upload.folder
+            };
+            if (this.props.type === 'image') {
+                data['image'] = 'resize';
             }
-            data.append("folder", this.props.upload.folder);
 
-            $.post({
-                data,
-                type: "POST",
-                url: this.props.upload.host,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: (uploadedFile) => {
+            rxHttp.uploadFile(this.props.upload.host, data).subscribe(
+                (response) => {
                     if (this.props.single) {
                         this.showUploader = false;
                     }
-                    this.files.push(uploadedFile.data[0]);
+                    this.files.push(response[0]);
                     this.props.uploadChange(this.files);
-                    store.dispatch(showLoader(false));
+                    this.forceUpdate();
                 },
-                error: (error) => {
+                (error) => {
                     loggerErr("Uploader, uploadFile", error);
-                    store.dispatch(showLoader(false));
                 }
-            });
+            );
         }
         else {
             loggerErr("Uploader, uploadFile", "File is already uploaded.");
         }
     }
 
-    deleteFile(fileUrl) {
-        let origFileUrl = fileUrl;
-        if (fileUrl.name) {
-            fileUrl = fileUrl.fileName;
-        }
-        if (fileUrl.thumbName) {
-            fileUrl = [fileUrl.thumbName, fileUrl.fileName];
-        }
-        let data = JSON.stringify({
-            action: "del",
-            file: fileUrl
-        });
+    deleteFile(file) {
 
-        store.dispatch(showLoader(true));
+        file = file.thumbName ? [file.thumbName, file.fileName] : file.fileName;
+
+        let data = {action: "del", file};
 
         return rxHttp.post(this.props.upload.host, data).subscribe(
             (response) => {
-                if (response[0].deletedFile == fileUrl || (response[0].deletedFile == fileUrl[0] && response[1].deletedFile == fileUrl[1])) {
-                    this.files.splice(this.files.indexOf(fileUrl), 1);
+                if (response[0].deletedFile === file || (response[0].deletedFile === file[0] && response[1].deletedFile === file[1])) {
+                    this.files.splice(this.files.indexOf(file), 1);
                     this.props.uploadChange(this.files);
                     if (this.props.single) {
                         this.showUploader = false;
                     }
-                    store.dispatch(showLoader(false));
                 }    
             },
             (error) => {
                 loggerErr("Summernote, mediaDelete", error);
-                store.dispatch(showLoader(false));
             }
         );
     }
 
     render() {
 
-        let classSwitch = classNames({
-            filesContainer: this.type=='file',
-            imgContainer: this.type=='image'
+        let rowSwitch = classNames({
+            row: true,
+            'filesContainer': this.props.type==='file',
+            'imgContainer': this.props.type==='image'
+        });
+
+        let colSwitch = classNames({
+            'fileLinkWrap': this.props.type==='file',
+            'fileWrap': this.props.type==='image'
         });
 
         return (
             <div>
             {this.showUploader &&
                 <label className="uploader">
-                    <input type="file" className="fileUpl" onchange={() => this.uploadFile} />
-                    <span><i className="fa fa-upload" aria-hidden="true"></i>{this.props.uploadLabel}</span>
+                    <input type="file" className="fileUpl" onChange={this.uploadFile} />
+                    <span><i className="fa fa-upload" aria-hidden="true"></i> {this.props.uploadLabel}</span>
                 </label>
             }
             {this.files && this.files.length > 0 &&
-                <Row className={classSwitch}>
-                {this.props.tyoe.file &&
-                    <div>
+                <div className={rowSwitch}>                    
                     {this.files.map((file, i) => (
-                        <Col key={i} xs="12" md="3" lg="2" className="fileLinkWrap">
-                            <a href={file.fileName} target="_blank" className="sameHeight fileLink">
-                            <i className="fa fa-file" aria-hidden="true"></i> {file.name}
-                            </a>
-                            <span className="fileDel" title={this.props.delLabel} onclick={() => this.deleteFile}>x</span>
+                        <Col key={i} xs="12" md="2" className={colSwitch}>
+                        {this.props.type === 'file' &&
+                            <div>
+                                <a href={file.fileName} target="_blank" className="sameHeight fileLink">
+                                <i className="fa fa-file" aria-hidden="true"></i> {file.name}
+                                </a>
+                                <span className="fileDel" title={this.props.delLabel} id={i} onClick={(file) => this.deleteFile(file)}>x</span>
+                            </div>
+                        }
+                        {this.props.type === 'image' &&
+                            <div>
+                                <img src={file.thumbName} alt={file.thumbName} className="img-fluid img-rounded sameHeight" />
+                                <span className="fileDel" title={this.props.delLabel} onClick={() => this.deleteFile(file)}>x</span>
+                            </div>
+                        }
                         </Col>
                     ))}
-                    </div>    
-                }
-                {this.props.tyoe.image &&
-                    <div>
-                    {this.files.map((file, i) => (
-                        <Col key={i} xs="12" md="2" className="fileWrap">
-                            <img src={file.thumbName} className="img-fluid img-rounded sameHeight" />
-                            <span className="fileDel" title={this.props.delLabel} onclick={() => this.deleteFile}>x</span>
-                        </Col>
-                    ))}
-                    </div>    
-                }
-                </Row>
+                </div>
             }
             </div>
         )
@@ -156,10 +137,7 @@ Uploader.propTypes = {
     type: PropTypes.string,
     single: PropTypes.bool,
     required: PropTypes.bool,
-    uploadValue: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.array
-    ]),
+    files: PropTypes.array,
     uploadChange: PropTypes.func, 
     upload: PropTypes.object                    // {host, folder}
 };

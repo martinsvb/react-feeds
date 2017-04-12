@@ -91,3 +91,15 @@ button,
         margin-bottom: .8rem;
     }
 }
+
+.img-fluid,
+.carousel-inner > .carousel-item > img,
+.carousel-inner > .carousel-item > a > img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.img-rounded {
+  border-radius: .2rem;
+}
