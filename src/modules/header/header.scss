@@ -76,6 +76,11 @@ header {
         display: inline-block;
     }
 
+    &-avatar {
+        width: 2rem;
+        height: 2rem;
+    }
+
     /** Medium screens */
     @include media-breakpoint-up(md) {
         &-name {

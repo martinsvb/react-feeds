@@ -44,9 +44,12 @@ export class Profile extends Component {
     this.initModel();
     this.initValidation();
 
+    this.validator = new Validator(this.props.params.lang, this.valRules, this.model);
+
     this.uploadFolder = 'avatars';
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
     this.handleUploadChange = this.handleUploadChange.bind(this);
     this.changeProfile = this.changeProfile.bind(this);
     this.initModel = this.initModel.bind(this);
@@ -79,6 +82,15 @@ export class Profile extends Component {
         'newrepassword': {state: '', error: ''},
         'valid': true
       };
+
+    this.valRules = {
+        firstName: ['required', 'minLength:3'],
+        lastName: ['required', 'minLength:3'],
+        email: ['required', 'emailSimple'],
+        password: ['required', 'minLength:5'],
+        newpassword: ['required', 'minLength:5'],
+        newrepassword: ['required', 'minLength:5', `pair:${this.props.tr.newPassword},newpassword`]
+    };
   }
 
   handleChange(event) {
@@ -88,61 +100,37 @@ export class Profile extends Component {
 
     this.model[name] = value;
 
-    let rules = {
-        firstName: {
-            required: [this.model.firstName],
-            minLength: [3, this.model.firstName]
-        },
-        lastName: {
-            required: [this.model.lastName],
-            minLength: [3, this.model.lastName]
-        },
-        email: {
-            required: [this.model.email],
-            emailSimple: [this.model.email]
-        },
-        password: {
-            required: [this.model.password],
-            minLength: [5, this.model.password]
-        },
-        newpassword: {
-            required: [this.model.newpassword],
-            minLength: [5, this.model.newpassword]
-        },
-        newrepassword: {
-            required: [this.model.newrepassword],
-            minLength: [5, this.model.newrepassword],
-            pair: [this.props.tr.newpassword, this.model.newpassword, this.model.newrepassword]
-        }
-    };
-
-    let validator = new Validator(this.props.params.lang);
-    let valMessage = validator.validate(rules[name]);
-
     if (this.model.chpassword) {
-        this.validation.valid = validator.formValid(rules);
+        this.validation.valid = this.validator.formValid();
     }
     if (this.model.delete) {
-        this.validation.valid = validator.formValid({
-            firstName: rules.firstName,
-            lastName: rules.lastName,
-            email: rules.email,
-            password: rules.password,
-        });
+        this.validation.valid = this.validator.formValid(['firstName', 'lastName', 'email', 'password']);
     }
     if (!this.model.chpassword && !this.model.delete) {
         this.validation.valid = true;
     }
-    this.validation[name] = {
-        state: valMessage ? 'danger' : 'success',
-        error: valMessage ? valMessage : ''
-      };
 
     this.forceUpdate();
   }
 
+  handleBlur(event) {
+    const name = event.target.name;
+
+    if (Object.keys(this.valRules).includes(name)) {
+        let valMessage = this.validator.itemValid(name);
+        
+        this.validation[name] = {
+            state: valMessage ? 'danger' : 'success',
+            error: valMessage ? valMessage : ''
+        };
+
+        this.forceUpdate();
+    }
+  }
+
   handleUploadChange(uploaded) {
       this.model.avatar = uploaded ? uploaded[0] : {};
+      this.changeProfile();
   }
 
   changeProfile(event) {
@@ -150,7 +138,7 @@ export class Profile extends Component {
       
       this.props.showLoader(true);
       
-      rxHttp.put(`${hostApi}/user`, [this.model]).subscribe(
+      rxHttp.put(`${hostApi}/profile`, this.model).subscribe(
           (data) => {
             this.props.showLoader(false);
             let message = responseHandler(data, this.props.tr.userTr, {0: 'profileNotChanged', 1: 'profileChanged'});
@@ -161,7 +149,7 @@ export class Profile extends Component {
           (error) => {
               loggerErr("Profile, changeProfile", error);
               this.props.showLoader(false);
-              this.props.addMessage({type: "danger", text: this.props.tr.userTr.userNotLogged});
+              this.props.addMessage({type: "danger", text: this.props.tr.userTr.profileNotChanged});
           }
       );
   }
@@ -184,7 +172,7 @@ export class Profile extends Component {
                   <FormGroup color={this.validation.firstName.state}>
                       <Label for="firstName">{this.props.tr.firstName}</Label>
                       <Input state={this.validation.firstName.state} type="text" id="firstName" name="firstName" value={this.model.firstName}
-                      onChange={this.handleChange} placeholder={this.props.tr.firstName} />
+                      onChange={this.handleChange} onBlur={this.handleBlur} placeholder={this.props.tr.firstName} />
                       <FormFeedback>{this.validation.firstName.error}</FormFeedback>
                   </FormGroup>
                   </Col>
@@ -192,7 +180,7 @@ export class Profile extends Component {
                   <FormGroup color={this.validation.lastName.state}>
                       <Label for="lastName">{this.props.tr.lastName}</Label>
                       <Input state={this.validation.lastName.state} type="text" id="lastName" name="lastName" value={this.model.lastName}
-                      onChange={this.handleChange} placeholder={this.props.tr.lastName} />
+                      onChange={this.handleChange} onBlur={this.handleBlur} placeholder={this.props.tr.lastName} />
                       <FormFeedback>{this.validation.lastName.error}</FormFeedback>
                   </FormGroup>
                   </Col>
@@ -202,7 +190,7 @@ export class Profile extends Component {
                   <FormGroup color={this.validation.email.state}>
                     <Label for="email">{this.props.tr.email}</Label>
                       <Input state={this.validation.email.state} type="text" id="email" name="email" value={this.model.email}
-                      onChange={this.handleChange} placeholder={this.props.tr.email} disabled />
+                      onChange={this.handleChange} onBlur={this.handleBlur} placeholder={this.props.tr.email} disabled />
                       <FormFeedback>{this.validation.email.error}</FormFeedback>
                   </FormGroup>
                   </Col>
@@ -210,7 +198,7 @@ export class Profile extends Component {
                   <FormGroup color={this.validation.role.state}>
                     <Label for="role">{this.props.tr.role}</Label>
                       <Input state={this.validation.role.state} type="text" id="role" name="role" value={this.model.role}
-                      onChange={this.handleChange} placeholder={this.props.tr.role} disabled />
+                      onChange={this.handleChange} onBlur={this.handleBlur} placeholder={this.props.tr.role} disabled />
                       <FormFeedback>{this.validation.role.error}</FormFeedback>
                   </FormGroup>
                   </Col>
@@ -219,7 +207,7 @@ export class Profile extends Component {
                   <Col xs="12" md="6">
                     <FormGroup check>
                         <Label check>
-                            <Input type="checkbox" name="chpassword" value={this.model.chpassword} onChange={this.handleChange} disabled={this.model.delete} />{' '}
+                            <Input type="checkbox" name="chpassword" value={this.model.chpassword} onChange={this.handleChange} onBlur={this.handleBlur} disabled={this.model.delete} />{' '}
                             {this.props.tr.changePassword}
                         </Label>
                     </FormGroup>
@@ -227,7 +215,7 @@ export class Profile extends Component {
                   <Col xs="12" md="6">
                     <FormGroup check>
                         <Label check>
-                            <Input type="checkbox" name="delete" value={this.model.delete} onChange={this.handleChange} disabled={this.model.chpassword} />{' '}
+                            <Input type="checkbox" name="delete" value={this.model.delete} onChange={this.handleChange} onBlur={this.handleBlur} disabled={this.model.chpassword} />{' '}
                             {this.props.tr.delete}
                         </Label>
                     </FormGroup>
@@ -239,7 +227,7 @@ export class Profile extends Component {
                   <hr />
                   <FormGroup color={this.validation.password.state}>
                       <Input state={this.validation.password.state} type="password" name="password" value={this.model.password}
-                      onChange={this.handleChange} placeholder={this.props.tr.password} />
+                      onChange={this.handleChange} onBlur={this.handleBlur} placeholder={this.props.tr.password} />
                       <FormFeedback>{this.validation.password.error}</FormFeedback>
                   </FormGroup>
                   </div>
@@ -248,12 +236,12 @@ export class Profile extends Component {
                     <div>
                   <FormGroup color={this.validation.newpassword.state}>
                       <Input state={this.validation.newpassword.state} type="password" name="newpassword" value={this.model.newpassword}
-                      onChange={this.handleChange} placeholder={this.props.tr.newPassword} />
+                      onChange={this.handleChange} onBlur={this.handleBlur} placeholder={this.props.tr.newPassword} />
                       <FormFeedback>{this.validation.newpassword.error}</FormFeedback>
                   </FormGroup>
                   <FormGroup color={this.validation.newrepassword.state}>
                       <Input state={this.validation.newrepassword.state} type="password" name="newrepassword" value={this.model.newrepassword}
-                      onChange={this.handleChange} placeholder={this.props.tr.newRepassword} />
+                      onChange={this.handleChange} onBlur={this.handleBlur} placeholder={this.props.tr.newRepassword} />
                       <FormFeedback>{this.validation.newrepassword.error}</FormFeedback>
                   </FormGroup>
                   </div>

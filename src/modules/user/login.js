@@ -41,7 +41,10 @@ export class Login extends Component {
         this.initModel();
         this.initValidation();
 
+        this.validator = new Validator(this.props.params.lang, this.valRules, this.model);
+
         this.handleChange = this.handleChange.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
         this.login = this.login.bind(this);
     }
 
@@ -57,6 +60,11 @@ export class Login extends Component {
           'email': {state: '', error: ''},
           'password': {state: '', error: ''},
           'valid': false
+        };
+
+        this.valRules = {
+            email: ['required', 'emailSimple'],
+            password: ['required', 'minLength:5']
         };
     }
 
@@ -95,6 +103,7 @@ export class Login extends Component {
                 this.props.addMessage(message);
             }
             if (data.info === 1) {
+                if (data.user.avatar) data.user.avatar = JSON.parse(data.user.avatar);
                 cache.set('user', data.user);
                 this.props.setUser(data.user);
                 hashHistory.push(`/${this.props.params.lang}/home`);
@@ -115,27 +124,24 @@ export class Login extends Component {
 
       this.model[name] = value;
 
-      let rules = {
-          email: {
-              required: [this.model.email],
-              emailSimple: [this.model.email]
-          },
-          password: {
-              required: [this.model.password],
-              minLength: [5, this.model.password]
-          }
-      };
-
-      let validator = new Validator(this.props.params.lang);
-      let valMessage = validator.validate(rules[name]);
-
-      this.validation.valid = validator.formValid(rules);
-      this.validation[name] = {
-          state: valMessage ? 'danger' : 'success',
-          error: valMessage ? valMessage : ''
-        };
+      this.validation.valid = this.validator.formValid();
 
       this.forceUpdate();
+    }
+
+    handleBlur(event) {
+      const name = event.target.name;
+
+      if (Object.keys(this.valRules).includes(name)) {
+        let valMessage = this.validator.itemValid(name);
+
+        this.validation[name] = {
+            state: valMessage ? 'danger' : 'success',
+            error: valMessage ? valMessage : ''
+            };
+
+        this.forceUpdate();
+      }
     }
 
     render() {

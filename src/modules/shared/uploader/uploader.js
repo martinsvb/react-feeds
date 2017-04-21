@@ -10,13 +10,12 @@ export class Uploader extends Component {
     constructor(props) {
         super(props);
 
-        this.files = [];
-        if (this.props.file) this.files.push[this.props.file];
-        if (this.props.files) this.files = this.props.files;
+        this.files = this.props.files || [];
+        if (this.props.file) this.files.push(this.props.file);
         
         this.uploading = false;
 
-        this.showUploader = true;
+        this.showUploader = this.files.length > 0 ? false : true;
 
         this.uploadFile = this.uploadFile.bind(this);
         this.deleteFile = this.deleteFile.bind(this);
@@ -77,8 +76,9 @@ export class Uploader extends Component {
                     this.files.splice(this.files.indexOf(file), 1);
                     this.props.uploadChange(this.files);
                     if (this.props.single) {
-                        this.showUploader = false;
+                        this.showUploader = true;
                     }
+                    this.forceUpdate();
                 }    
             },
             (error) => { loggerErr("Uploader, deletedFile", error); }
@@ -139,7 +139,10 @@ Uploader.propTypes = {
     type: PropTypes.string,
     single: PropTypes.bool,
     required: PropTypes.bool,
-    file: PropTypes.object,
+    file: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.object
+    ]),
     files: PropTypes.array,
     uploadChange: PropTypes.func, 
     upload: PropTypes.object                    // {host, folder}

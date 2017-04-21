@@ -7,7 +7,8 @@ import { getTranslation } from '../shared/index';
 
 @connect((store) => {
   return {
-    tr: store.transReducer
+    tr: store.transReducer,
+    user: store.userReducer
   };
 })
 export default class Home extends Component {
@@ -24,6 +25,7 @@ export default class Home extends Component {
                     <h1>{this.props.tr.home}</h1>
                     <p>Welcome in beatiful feed application!</p>
                 </div>
+                <div><pre>{JSON.stringify(this.props.user, null, 2) }</pre></div>
             </div>
         )
     }

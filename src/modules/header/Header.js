@@ -119,7 +119,8 @@ class Header extends Component {
                             <div className="right-box">
                                 <Dropdown className="user-nav" isOpen={this.state.userDropDown} toggle={() => this.toggle('userDropDown')}>
                                     <DropdownToggle className="noBorder" caret>
-                                        <i className="fa fa-user" aria-hidden="true"></i>
+                                        {this.props.user.avatar && <img className="user-nav-avatar rounded-circle" src={this.props.user.avatar.thumbName} alt="User avatar" />}
+                                        {!this.props.user.avatar && <i className="fa fa-user" aria-hidden="true"></i>}
                                         <span className="user-nav-name">&nbsp;{this.props.user.firstName || this.props.tr.guest}</span>
                                     </DropdownToggle>
                                         {!this.props.user.firstName &&

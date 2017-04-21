@@ -36,9 +36,12 @@ export class Register extends Component {
         this.initModel();
         this.initValidation();
 
+        this.validator = new Validator(this.props.params.lang, this.valRules, this.model);
+
         this.uploadFolder = 'avatars';
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
         this.handleUploadChange = this.handleUploadChange.bind(this);
         this.register = this.register.bind(this);
         this.initModel = this.initModel.bind(this);
@@ -64,6 +67,14 @@ export class Register extends Component {
           'password': {state: '', error: ''},
           'repassword': {state: '', error: ''},
           'valid': false
+        };
+
+        this.valRules = {
+            firstName: ['required', 'minLength:3'],
+            lastName: ['required', 'minLength:3'],
+            email: ['required', 'emailSimple'],
+            password: ['required', 'minLength:5'],
+            repassword: ['required', 'minLength:5', `pair:${this.props.tr.password},password`]
         };
     }
 
@@ -96,43 +107,27 @@ export class Register extends Component {
       const target = event.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
-      
+
       this.model[name] = value;
 
-      let rules = {
-          firstName: {
-              required: [this.model.firstName],
-              minLength: [3, this.model.firstName]
-          },
-          lastName: {
-              required: [this.model.lastName],
-              minLength: [3, this.model.lastName]
-          },
-          email: {
-              required: [this.model.email],
-              emailSimple: [this.model.email]
-          },
-          password: {
-              required: [this.model.password],
-              minLength: [5, this.model.password]
-          },
-          repassword: {
-              required: [this.model.repassword],
-              minLength: [5, this.model.repassword],
-              pair: [this.props.tr.password, this.model.password, this.model.repassword]
-          }
-      };
-      
-      let validator = new Validator(this.props.params.lang);
-      let valMessage = validator.validate(rules[name]);
-
-      this.validation.valid = validator.formValid(rules);
-      this.validation[name] = {
-          state: valMessage ? 'danger' : 'success',
-          error: valMessage ? valMessage : ''
-        };
+      this.validation.valid = this.validator.formValid();
 
       this.forceUpdate();
+    }
+
+    handleChange(event) {
+      const name = event.target.name;
+
+      if (Object.keys(this.valRules).includes(name)) {
+        let valMessage = this.validator.itemValid(name);
+
+        this.validation[name] = {
+            state: valMessage ? 'danger' : 'success',
+            error: valMessage ? valMessage : ''
+            };
+
+        this.forceUpdate();
+      }
     }
 
     handleUploadChange(uploaded) {
@@ -156,31 +151,31 @@ export class Register extends Component {
                   <Col xs="12" md="6">
                   <FormGroup color={this.validation.firstName.state}>
                       <Input state={this.validation.firstName.state} type="text" name="firstName" value={this.model.firstName}
-                      onChange={this.handleChange} placeholder={this.props.tr.firstName} />
+                      onChange={this.handleChange} onBlur={this.handleBlur} placeholder={this.props.tr.firstName} />
                       <FormFeedback>{this.validation.firstName.error}</FormFeedback>
                   </FormGroup>
                   </Col>
                   <Col xs="12" md="6">
                   <FormGroup color={this.validation.lastName.state}>
                       <Input state={this.validation.lastName.state} type="text" name="lastName" value={this.model.lastName}
-                      onChange={this.handleChange} placeholder={this.props.tr.lastName} />
+                      onChange={this.handleChange} onBlur={this.handleBlur} placeholder={this.props.tr.lastName} />
                       <FormFeedback>{this.validation.lastName.error}</FormFeedback>
                   </FormGroup>
                   </Col>
                   </Row>
                   <FormGroup color={this.validation.email.state}>
                       <Input state={this.validation.email.state} type="text" name="email" value={this.model.email}
-                      onChange={this.handleChange} placeholder={this.props.tr.email} />
+                      onChange={this.handleChange} onBlur={this.handleBlur} placeholder={this.props.tr.email} />
                       <FormFeedback>{this.validation.email.error}</FormFeedback>
                   </FormGroup>
                   <FormGroup color={this.validation.password.state}>
                       <Input state={this.validation.password.state} type="password" name="password" value={this.model.password}
-                      onChange={this.handleChange} placeholder={this.props.tr.password} />
+                      onChange={this.handleChange} onBlur={this.handleBlur} placeholder={this.props.tr.password} />
                       <FormFeedback>{this.validation.password.error}</FormFeedback>
                   </FormGroup>
                   <FormGroup color={this.validation.repassword.state}>
                       <Input state={this.validation.repassword.state} type="password" name="repassword" value={this.model.repassword}
-                      onChange={this.handleChange} placeholder={this.props.tr.repassword} />
+                      onChange={this.handleChange} onBlur={this.handleBlur} placeholder={this.props.tr.repassword} />
                       <FormFeedback>{this.validation.repassword.error}</FormFeedback>
                   </FormGroup>
                   <Row>

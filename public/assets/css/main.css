@@ -17679,6 +17679,10 @@ header {
   .lang-nav-name-mobile,
   .user-nav-name-mobile {
     display: inline-block; }
+  .lang-nav-avatar,
+  .user-nav-avatar {
+    width: 2rem;
+    height: 2rem; }
   @media (min-width: 768px) {
     .lang-nav-name,
     .user-nav-name {
@@ -17695,8 +17699,7 @@ header {
   height: auto; }
 
 .feed {
-  margin-bottom: 1rem;
-  /** Mobile first */ }
+  margin-bottom: 1rem; }
   .feed-avatar {
     width: 5rem;
     height: 5rem;

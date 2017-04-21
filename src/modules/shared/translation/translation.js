@@ -77,6 +77,8 @@ export const translation = {
     "notCompleteCredentials": "Please fill all required credentials.",
     "notMatchPasswords": "Passwords not matched.",
     "userTr": {
+      "profileChanged": "Profile was successfully changed.",
+      "profileNotChanged": "Profile change operation failed, please try it again.",
       "userExists": "Your user alredy exists.",
       "userRegistered": "You were successfully registered.",
       "userRegistrationError": "Registration error, please try it again.",
@@ -95,8 +97,6 @@ export const translation = {
       "userNotActivated": "Your user profile wasn't activated. Please reload this page for new activation."
     },
     "xPass": "Please, fill all necessary passwords.",
-    "profileChanged": "Profile was successfully changed.",
-    "profileNotChanged": "Profile change operation failed, please try it again.",
     "requiredTence": (name) => "% is required.".replace("%", this.translation.en[name]),
     "minLengthTence": (minLength) => "Minimal length is % characters.".replace("%", minLength),
     "patternTence": (name) => "Value doesn't match type %.".replace("%", name),
@@ -210,6 +210,8 @@ export const translation = {
     "notCompleteCredentials": "Prosím vyplňte všechny povinné přihlašovací údaje.",
     "notMatchPasswords": "Zadaná hesla se neschodují.",
     "userTr": {
+      "profileChanged": "Profil byl úspěšně změněn.",
+      "profileNotChanged": "Při změně profilu nastala chyba, prosím zkuste to znovu.",
       "userExists": "Vámi zadaný uživatel již existuje.",
       "userRegistered": "Vaše registrace proběhla úspěšně.",
       "userRegistrationError": "Chyba registrace, prosím zkuste jí znovu.",
@@ -228,8 +230,6 @@ export const translation = {
       "userNotActivated": "Váš uživatelský profil nebyl aktivován. Prosím obnovte tuto stránku pro novou aktivaci.",
     },
     "xPass": "Prosím, vyplňte všechna nezbytná hesla.",
-    "profileChanged": "Profil byl úspěšně změněn.",
-    "profileNotChanged": "Při změně profilu nastala chyba, prosím zkuste to znovu.",
     "requiredTence": (name) => "% je vyžadováno.".replace("%", this.translation.cz[name]),
     "minLengthTence": (minLength) => "Minimální délka je % znaků.".replace("%", minLength),
     "patternTence": (name) => "Hodnota neodpovídá %.".replace("%", name),
@@ -343,6 +343,8 @@ export const translation = {
     "notCompleteCredentials": "Prosím vyplňte všetky povinné prihlasovacie údaje.",
     "notMatchPasswords": "Zadané heslá sa nezhodujú.",
     "userTr": {
+      "profileChanged": "Profil bol úspešne zmenený.",
+      "profileNotChanged": "Pri zmene profilu nastala chyba, prosím skúste znova.",
       "userExists": "Vami zadaný používateľ už existuje.",
       "userRegistered": "Vaša registrácia prebehla úspešne.",
       "userRegistrationError": "Chyba registrácie, prosím skúste jej znovu.",
@@ -361,8 +363,6 @@ export const translation = {
       "userNotActivated": "Váš užívateľský profil nebol aktivovaný. Obnovte túto stránku pre novů aktiváciu.",
     },
     "xPass": "Prosím, vyplňte všetky potrebné heslá.",
-    "profileChanged": "Profil bol úspešne zmenený.",
-    "profileNotChanged": "Pri zmene profilu nastala chyba, prosím skúste znova.",
     "requiredTence": (name) => "% je vyžadované.".replace("%", this.translation.sk[name]),
     "minLengthTence": (minLength) => "Minimálna dĺžka je % znakov.".replace("%", minLength),
     "patternTence": (name) => "Hodnota nezodpovedá typu %.".replace("%", name),
