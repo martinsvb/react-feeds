@@ -115,20 +115,24 @@ export class Register extends Component {
       this.forceUpdate();
     }
 
-    handleChange(event) {
-      const name = event.target.name;
+  handleBlur(event) {
+    const name = event.target.name;
 
-      if (Object.keys(this.valRules).includes(name)) {
+    this.validate(name);
+
+    this.forceUpdate();
+  }
+
+  validate(name) {
+    if (Object.keys(this.valRules).includes(name)) {
         let valMessage = this.validator.itemValid(name);
-
+        
         this.validation[name] = {
             state: valMessage ? 'danger' : 'success',
             error: valMessage ? valMessage : ''
-            };
-
-        this.forceUpdate();
-      }
+        };
     }
+  }
 
     handleUploadChange(uploaded) {
         this.model.avatar = uploaded ? uploaded[0] : {};

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { hashHistory } from 'react-router';
 import { Row, Col, Button, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
 import { connect } from 'react-redux';
 
@@ -39,8 +40,6 @@ export class Profile extends Component {
   constructor(props) {
     super(props);
 
-    this.props.setUser(cache.get('user') || {});
-
     this.initModel();
     this.initValidation();
 
@@ -54,6 +53,7 @@ export class Profile extends Component {
     this.changeProfile = this.changeProfile.bind(this);
     this.initModel = this.initModel.bind(this);
     this.initValidation = this.initValidation.bind(this);
+    this.validate = this.validate.bind(this);
   }
 
   initModel() {
@@ -116,6 +116,12 @@ export class Profile extends Component {
   handleBlur(event) {
     const name = event.target.name;
 
+    this.validate(name);
+
+    this.forceUpdate();
+  }
+
+  validate(name) {
     if (Object.keys(this.valRules).includes(name)) {
         let valMessage = this.validator.itemValid(name);
         
@@ -123,8 +129,6 @@ export class Profile extends Component {
             state: valMessage ? 'danger' : 'success',
             error: valMessage ? valMessage : ''
         };
-
-        this.forceUpdate();
     }
   }
 
@@ -133,17 +137,28 @@ export class Profile extends Component {
       this.changeProfile();
   }
 
-  changeProfile(event) {
-      event.preventDefault();
-      
+  changeProfile(event = null) {
+      event && event.preventDefault();
       this.props.showLoader(true);
       
       rxHttp.put(`${hostApi}/profile`, this.model).subscribe(
           (data) => {
             this.props.showLoader(false);
-            let message = responseHandler(data, this.props.tr.userTr, {0: 'profileNotChanged', 1: 'profileChanged'});
+            let message = responseHandler(
+                data,
+                this.props.tr.userTr,
+                this.model.delete ? {0: 'profileNotDeleted', 1: 'profileDeleted'} : {0: 'profileNotChanged', 1: 'profileChanged'}
+            );
             if (message.text) {
                 this.props.addMessage(message);
+            }
+            if (message.type === 'success') {
+                let changedUser = this.model.delete ? {} : {...this.props.user, ...this.model};
+                cache.set('user', changedUser);
+                this.props.setUser(changedUser);
+                if (this.model.delete) {
+                    hashHistory.push(location);
+                }
             }
           },
           (error) => {
@@ -159,13 +174,13 @@ export class Profile extends Component {
         return (
           <div className="container">    
               <h1>{this.props.tr.profile}</h1>
-              <form onSubmit={this.changeProfile}>
+              <form onSubmit={this.changeProfile} ref="profileForm">
                     <Uploader file={this.model.avatar}
                         type="image"
                         single
                         upload={{host: hostUpload, folder: this.uploadFolder}}
                         tr={{label: this.props.tr.uploader.uploadPic, uploader: this.props.tr.uploader}}
-                        uploadChange={() => this.handleUploadChange}
+                        uploadChange={this.handleUploadChange}
                     />
                   <Row>
                   <Col xs="12" md="6">
@@ -249,7 +264,13 @@ export class Profile extends Component {
                   
                   <Row>
                     <Col md="12">
-                      <Button color="success" className="ownButton" disabled={!this.validation.valid} title={this.props.tr.submit}>{this.props.tr.submit}</Button>
+                      <Button
+                        color="success"
+                        className="ownButton"
+                        ref="profileButton"
+                        disabled={!this.validation.valid}
+                        title={this.props.tr.submit}>{this.props.tr.submit}
+                    </Button>
                     </Col>
                   </Row>
               </form>

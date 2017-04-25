@@ -79,6 +79,8 @@ export const translation = {
     "userTr": {
       "profileChanged": "Profile was successfully changed.",
       "profileNotChanged": "Profile change operation failed, please try it again.",
+      "profileDeleted": "Profile was successfully completely deleted.",
+      "profileNotDeleted": "Profile delete operation failed, please try it again.",
       "userExists": "Your user alredy exists.",
       "userRegistered": "You were successfully registered.",
       "userRegistrationError": "Registration error, please try it again.",
@@ -212,6 +214,8 @@ export const translation = {
     "userTr": {
       "profileChanged": "Profil byl úspěšně změněn.",
       "profileNotChanged": "Při změně profilu nastala chyba, prosím zkuste to znovu.",
+      "profileDeleted": "Profil byl úspěšně kompletně smazán.",
+      "profileNotDeleted": "Při smazání profilu nastala chyba, prosím zkuste to znovu.",
       "userExists": "Vámi zadaný uživatel již existuje.",
       "userRegistered": "Vaše registrace proběhla úspěšně.",
       "userRegistrationError": "Chyba registrace, prosím zkuste jí znovu.",
@@ -345,6 +349,8 @@ export const translation = {
     "userTr": {
       "profileChanged": "Profil bol úspešne zmenený.",
       "profileNotChanged": "Pri zmene profilu nastala chyba, prosím skúste znova.",
+      "profileDeleted": "Profil bol úspešne zmazaný.",
+      "profileNotDeleted": "Pri zmazanie profilu nastala chyba, prosím skúste znova.",
       "userExists": "Vami zadaný používateľ už existuje.",
       "userRegistered": "Vaša registrácia prebehla úspešne.",
       "userRegistrationError": "Chyba registrácie, prosím skúste jej znovu.",
