@@ -43,9 +43,9 @@ export const http = {
                         ...headers
                     };
 
-                    let user = cache.get('user');
-                    if (user && user.email) {
-                        mergedHeaders["email"] = user.email;
+                    let token = cache.get('token');
+                    if (token) {
+                        mergedHeaders['Authorization'] = `Bearer ${token}`;
                     }
 
                     for (const key of Object.keys(mergedHeaders)) {

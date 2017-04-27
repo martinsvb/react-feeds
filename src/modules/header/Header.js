@@ -77,27 +77,12 @@ class Header extends Component {
 
     logout() {
 
-        this.props.showLoader(true);
+        this.props.addMessage({type: "success",text: this.props.tr.userTr.userLoggedOut});
         
-        rxHttp.get(`${hostApi}/logout`).subscribe(
-            (response) => {
-                this.props.showLoader(false);
-                this.props.addMessage({
-                    type: response.info === 1 ? "success" : "danger",
-                    text: response.info === 1 ? this.props.tr.userTr.userLoggedOut : this.props.tr.userTr.userNotLoggedOut
-                });
-                if (response.info === 1) {
-                    cache.set('user', {});
-                    this.props.setUser({});
-                    hashHistory.push(location);
-                }
-            },
-            (error) => {
-                loggerErr("Logout, logout", error);
-                this.props.showLoader(false);
-                this.props.addMessage({type: "danger", text: this.props.tr.userNotLoggedOut});
-            }
-        );
+        cache.set('token', '');
+        cache.set('user', {});
+        this.props.setUser({});
+        hashHistory.push(location);
     }
 
     render() {

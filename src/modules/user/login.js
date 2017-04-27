@@ -104,6 +104,7 @@ export class Login extends Component {
             }
             if (data.info === 1) {
                 if (data.user.avatar) data.user.avatar = JSON.parse(data.user.avatar);
+                cache.set('token', data.token);
                 cache.set('user', data.user);
                 this.props.setUser(data.user);
                 hashHistory.push(`/${this.props.params.lang}/home`);
