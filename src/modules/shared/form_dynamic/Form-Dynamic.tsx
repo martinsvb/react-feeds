@@ -15,8 +15,6 @@ import PickerWrapper from './pickers/PickerWrapper';
 import Tags from './Tags';
 import { Validator } from './validator';
 
-type TInputValue = string | moment.Moment | undefined | null;
-
 export interface IFormField {
     type: string;
     name: string;
@@ -396,17 +394,11 @@ extends React.Component<IFormDynamicProps & IFormDynamicAction, IFormDynamicStat
     renderLabel(name: string) {
 
         if (name) {
-            return (
-                <div>
-                    {this.props.fields.map((field, i) => (
-                        <div key={i}>
-                        {name === field.name &&
-                            <label htmlFor={field.name}>{field.label || field.name}</label>
-                        }
-                        </div>
-                    ))}
-                </div>
-            );
+            const field = this.props.fields.filter((f) => name === f.name)[0];
+
+            return field
+                ? <label htmlFor={field.name}>{field.label || field.name}</label>
+                : null;
         }
 
         return null;
