@@ -14,6 +14,8 @@ export class Validator {
 
   validate(validation, value) {
     
+    const specialRules = ['equal', 'greater', 'lower', 'greaterEqual', 'lowerEqual'];
+
     for (let rule of validation) {
       let ruleArr = rule.split(':');
       rule = ruleArr[0];
@@ -21,7 +23,7 @@ export class Validator {
         let params = ruleArr[1] ? ruleArr[1].split(',') : [];
         params.push(value);
 
-        if (['equal', 'greater', 'lower'].includes(rule)) {
+        if (specialRules.includes(rule)) {
           params.push(this.model[params[0]]);
         }
 
@@ -29,7 +31,7 @@ export class Validator {
           if (!this.rules[rule](...params)) {
             let message = this.messages[rule];
 
-            if (['minLength', 'maxLength', 'equal', 'greater', 'lower'].includes(rule)) {
+            if (['minLength', 'maxLength', ...specialRules].includes(rule)) {
               message = message.replace('%', params[0]);
             }
 

@@ -90,7 +90,7 @@ export const rules = {
     }
     rules._typeofCheck('equal', {secName}, 'string');
 
-    return value && secValue ? value === secValue : true;
+    return typeof value !== 'undefined' && typeof secValue !== 'undefined' ? value === secValue : true;
   },
 
   /**
@@ -109,7 +109,7 @@ export const rules = {
     }
     rules._typeofCheck('greater', {secName}, 'string');
 
-    return value && secValue ? value > secValue : true;
+    return typeof value !== 'undefined' && typeof secValue !== 'undefined' ? value > secValue : true;
   },
 
   /**
@@ -128,7 +128,45 @@ export const rules = {
     }
     rules._typeofCheck('lower', {secName}, 'string');
 
-    return value && secValue ? value < secValue : true;
+    return typeof value !== 'undefined' && typeof secValue !== 'undefined' ? value < secValue : true;
+  },
+
+  /**
+   *  Value is greater than secValue or same compare
+   * 
+   *  @param {string} secName name of pair input
+   *  @param {any} value checked value
+   *  @param {any} secValue pair value for check
+   * 
+   *  @return {boolean}
+   */
+  greaterEqual: (secName, value, secValue) => {
+    
+    if (!secName) {
+      throw new Error('Validation rules greaterEqual: Parameter secName is required.');
+    }
+    rules._typeofCheck('greaterEqual', {secName}, 'string');
+
+    return typeof value !== 'undefined' && typeof secValue !== 'undefined' ? value >= secValue : true;
+  },
+
+  /**
+   *  Value is lower than secValue or same compare
+   * 
+   *  @param {string} secName name of pair input
+   *  @param {any} value checked value
+   *  @param {any} secValue pair value for check
+   * 
+   *  @return {boolean}
+   */
+  lowerEqual: (secName, value, secValue) => {
+    
+    if (!secName) {
+      throw new Error('Validation rules lowerEqual: Parameter secName is required.');
+    }
+    rules._typeofCheck('lowerEqual', {secName}, 'string');
+
+    return typeof value !== 'undefined' && typeof secValue !== 'undefined' ? value <= secValue : true;
   },
 
   /**
@@ -139,14 +177,14 @@ export const rules = {
    *  @return {boolean}
    */
   required: (value) => {
-    
-    let result = true;
 
-    result = typeof value === 'string'
-      ? value.trim() ? true : false
-      : value ? true : false;
-    
-    return result;
+    switch (true) {
+      case typeof value === 'string':
+        return value.trim() ? true : false;
+      
+      default:
+        return value ? true : false;
+    }
   },
 
   /**
