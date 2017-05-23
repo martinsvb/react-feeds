@@ -1,3 +1,5 @@
+import { valueExists } from './validator';
+
 export const rules = {
 
   /**
@@ -90,7 +92,7 @@ export const rules = {
     }
     rules._typeofCheck('equal', {secName}, 'string');
 
-    return typeof value !== 'undefined' && typeof secValue !== 'undefined' ? value === secValue : true;
+    return valueExists(value) && valueExists(secValue) ? value === secValue : true;
   },
 
   /**
@@ -109,7 +111,7 @@ export const rules = {
     }
     rules._typeofCheck('greater', {secName}, 'string');
 
-    return typeof value !== 'undefined' && typeof secValue !== 'undefined' ? value > secValue : true;
+    return valueExists(value) && valueExists(secValue) ? value > secValue : true;
   },
 
   /**
@@ -128,7 +130,7 @@ export const rules = {
     }
     rules._typeofCheck('lower', {secName}, 'string');
 
-    return typeof value !== 'undefined' && typeof secValue !== 'undefined' ? value < secValue : true;
+    return valueExists(value) && valueExists(secValue) ? value < secValue : true;
   },
 
   /**
@@ -147,7 +149,7 @@ export const rules = {
     }
     rules._typeofCheck('greaterEqual', {secName}, 'string');
 
-    return typeof value !== 'undefined' && typeof secValue !== 'undefined' ? value >= secValue : true;
+    return valueExists(value) && valueExists(secValue) ? value >= secValue : true;
   },
 
   /**
@@ -166,7 +168,7 @@ export const rules = {
     }
     rules._typeofCheck('lowerEqual', {secName}, 'string');
 
-    return typeof value !== 'undefined' && typeof secValue !== 'undefined' ? value <= secValue : true;
+    return valueExists(value) && valueExists(secValue) ? value <= secValue : true;
   },
 
   /**

@@ -12,11 +12,17 @@ import Editor from './Editor';
 import Calendar from './pickers/Calendar';
 import Clock from './pickers/Clock';
 import PickerWrapper from './pickers/PickerWrapper';
+import * as Select from 'react-select';
 import Tags from './Tags';
-import { Validator } from './validator';
+import { Validator, valueExists } from './validator';
+
+export interface ISearchSelectItem {
+    value: string|number;
+    label: string|number;
+}
 
 export interface IFormField {
-    type: string;
+    type: string; // 'text', 'number', 'email', 'password', date, datetime, time, checkbox, textarea, editor, dropdown, searchselect, tags, button-[type]
     name: string;
     value?: any;
     placeholder?: string;
@@ -30,6 +36,7 @@ export interface IFormField {
     btnClear?: boolean;
     icon?: string;
     openedPicker?: boolean;
+    searchSelectOptions?: Array<Select.Option>;
     yearNav?: boolean;
     format?: string;
 }
@@ -203,6 +210,12 @@ extends React.Component<IFormDynamicProps & IFormDynamicAction, IFormDynamicStat
             case field.type === 'number':
                 return Number(value);
 
+            case field.type === 'searchselect' && valueExists(value):
+                value = value.constructor === Array
+                    ? value.map((item: ISearchSelectItem) => item.value).join(',')
+                    : value.value;
+                return value;
+
             default:
                 return value;
         }
@@ -334,6 +347,7 @@ extends React.Component<IFormDynamicProps & IFormDynamicAction, IFormDynamicStat
                             <Editor
                                 label={field.label}
                                 name={field.name}
+                                className={classNames(field.className, {invalid: this.state.error[field.name]})}
                                 onChange={(value: any) => this.handleChange(field.name, value, field)}
                                 value={this.state.model[field.name]}
                             />
@@ -346,11 +360,31 @@ extends React.Component<IFormDynamicProps & IFormDynamicAction, IFormDynamicStat
                     {field.type === 'dropdown' && field.children &&
                         <div className="input-wrapper">
                             <DropdownList
+                                name={field.name}
                                 placeholder={field.placeholder}
                                 selected={this.state.model[field.name]}
                                 multiselect={field.multiselect ? field.multiselect : false}
                                 onChange={(selected: any) => this.handleChange(field.name, selected, field)}
                                 children={field.children}
+                            />
+                            {this.isRequired(field) &&
+                            <span className={classNames('required', {invalid: this.state.error[field.name]})}>*</span>
+                            }
+                        </div>
+                    }
+
+                    {field.type === 'searchselect' &&
+                        <div className="input-wrapper">
+                            <Select
+                                name={field.name}
+                                className={classNames(field.className, {invalid: this.state.error[field.name]})}
+                                value={this.state.model[field.name]}
+                                options={field.searchSelectOptions}
+                                onChange={(selected: Select.Option) => this.handleChange(field.name, selected, field)}
+                                multi={field.multiselect ? field.multiselect : false}
+                                joinValues={true}
+                                autosize={true}
+                                disabled={field.disabled}
                             />
                             {this.isRequired(field) &&
                             <span className={classNames('required', {invalid: this.state.error[field.name]})}>*</span>

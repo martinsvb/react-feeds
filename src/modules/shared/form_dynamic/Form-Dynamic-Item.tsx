@@ -3,11 +3,19 @@ import * as React from 'react';
 import Button from '../buttons/Button';
 import FormDynamic, { IFormDynamicAction, IFormDynamicProps } from './Form-Dynamic';
 
+import * as Select from 'react-select';
+
+const options = [
+    { value: 'one', label: 'One' },
+    { value: 'two', label: 'Two' },
+    { value: 'three', label: 'Three', disabled: true },
+    { value: 'four', label: 'Four' },
+    { value: 'five', label: 'Five' }
+];
+
 export default
 class FormDynamicItem
 extends FormDynamic {
-
-    formValid: boolean;
 
     constructor(props: IFormDynamicProps & IFormDynamicAction) {
         super(props);
@@ -53,6 +61,14 @@ extends FormDynamic {
                 <div className="row">
                     <div className="col-xs-12 col-md-6">
                         {this.renderInput('check')}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-xs-12 col-md-6">
+                        {this.renderInput('select')}
+                    </div>
+                    <div className="col-xs-12 col-md-6">
+                        {this.renderInput('selectmulti')}
                     </div>
                 </div>
                 {this.state.model.check &&
@@ -129,7 +145,7 @@ export const fields = [
         name: 'max',
         placeholder: 'max',
         type: 'number',
-        validationRules: ['required', 'greater:min'],
+        validationRules: ['greaterEqual:min'],
         value: ''
     },
     {
@@ -137,6 +153,19 @@ export const fields = [
         name: 'check',
         type: 'checkbox',
         value: false
+    },
+    {
+        name: 'select',
+        type: 'searchselect',
+        value: 'one',
+        searchSelectOptions: options,
+    },
+    {
+        name: 'selectmulti',
+        type: 'searchselect',
+        multiselect: true,
+        value: 'one,two',
+        searchSelectOptions: options,
     },
     {
         buttonClick: (model: any) => { console.log(model); },

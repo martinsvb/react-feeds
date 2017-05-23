@@ -67,3 +67,5 @@ export class Validator {
       return valid;
   }
 }
+
+export const valueExists = (value) => value || value === 0 || value === false;
